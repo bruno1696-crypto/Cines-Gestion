@@ -2,10 +2,13 @@
 
 package com.cines.servicio.impl;
 
-import com.cines.dao.UsuarioDAO;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 
+
+import com.cines.dao.UsuarioDAO;
 import com.cines.modelo.Usuario;
 import com.cines.servicio.UsuarioServicio;
 
@@ -14,23 +17,29 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     @Override
-    public boolean validarUsuario(String usuario, String clavePlana) {
-        String claveMd5 = convertirA_MD5(clavePlana);
-        return usuarioDAO.validarUsuario(usuario, claveMd5);
+    public boolean validarUsuario(String nombreUsuario, String claveUsuario) {
+        UsuarioDAO usuariosDAO = new UsuarioDAO();
+        Usuario usuario = usuariosDAO.leerUsuario(nombreUsuario);
+        // Verificar si el usuario existe y si la clave coincide
+        // adicionalmente verificar que el ID del usuario no sea cero y que el nombre y la clave no sean nulos
+        if (usuario.getIdUsuario() != 0 && usuario.getUsuario() != null && usuario.getClave() != null) {
+            // Comparar la clave ingresada (convertida a MD5) con la clave almacenada en la base de datos
+            String claveMD5 = convertirMD5(claveUsuario);
+            
+            return usuario.getClave().equalsIgnoreCase(claveMD5);
+        }
+        // Si el usuario no existe o la clave no coincide, se retorna FALSE, indicando que el usuario no es válido
+        return false;
     }
 
-    // Método auxiliar para encriptar texto a MD5
-    private String convertirA_MD5(String input) {
+    private String convertirMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(input.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : messageDigest) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
+            byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error al cifrar la contraseña en MD5", e);
+            throw new RuntimeException("Error al encriptar en MD5", e);
         }
     }
+
 }
