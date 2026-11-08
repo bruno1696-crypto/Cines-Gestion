@@ -52,9 +52,6 @@ public class UsuarioFrame extends JFrame {
                 String usuario = txtUsuario.getText().trim();
                 String clave = new String(txtClave.getPassword()).trim();
 
-                System.out.println(">>> GUI - Usuario leído: '" + usuario + "'");
-                System.out.println(">>> GUI - Clave leída: '" + clave + "' (Largo: " + clave.length() + ")");
-                
                 // Instanciamos el servicio correspondiente
                 UsuarioServicio usuarioServicio = new UsuarioServicioImpl();
                 

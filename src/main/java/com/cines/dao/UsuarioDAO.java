@@ -4,40 +4,33 @@ package com.cines.dao;
 
 import com.cines.control.ConectarBase;
 import com.cines.modelo.Usuario;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 
 public class UsuarioDAO {
 
     public Usuario leerUsuario(String nombreUsuario) {
-        Usuario usuario = null;
+        
+        Usuario usuario = new Usuario();
         String sql = "SELECT * FROM usuarios WHERE usuario = ?";
         
-        ConectarBase conectarBase = new ConectarBase();
-
-        try (Connection conexion = conectarBase.conectar();
-             PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+        try {
+            var conexion = new ConectarBase().conectar();
+            var preparedStatement = conexion.prepareStatement(sql);
             
             preparedStatement.setString(1, nombreUsuario);
+            var resultSet = preparedStatement.executeQuery();
             
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    usuario = new Usuario();
-                    usuario.setIdUsuario(resultSet.getInt("idUsuario"));
-                    usuario.setUsuario(resultSet.getString("usuario"));
-                    usuario.setClave(resultSet.getString("clave"));
-                }
+            if (resultSet.next()) {
+                int idUsuario = resultSet.getInt("idUsuario");
+                String claveUsuario = resultSet.getString("clave");
+                usuario.setIdUsuario(idUsuario);
+                usuario.setUsuario(nombreUsuario);
+                usuario.setClave(claveUsuario);
+
             }
-        } catch (SQLException e) {
-            System.err.println("Error de SQL al leer el usuario: " + e.getMessage());
-            e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Error general al leer el usuario: " + e.getMessage());
             e.printStackTrace();
-        }            
-        
+            }             
         return usuario; 
+        }
     }
-}

@@ -14,26 +14,24 @@ import com.cines.servicio.UsuarioServicio;
 
 public class UsuarioServicioImpl implements UsuarioServicio {
 
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    
 
     @Override
     public boolean validarUsuario(String nombreUsuario, String claveUsuario) {
-    Usuario usuario = usuarioDAO.leerUsuario(nombreUsuario);
+        UsuarioDAO usuariosDAO = new UsuarioDAO();
+        Usuario usuario = usuariosDAO.leerUsuario(nombreUsuario);
+        
+        // Verificar si el usuario existe y si la clave coincide
+        // adicionalmente verificar que el ID del usuario no sea cero y que el nombre y la clave no sean nulos
+            if (usuario.getIdUsuario() != 0 && usuario.getUsuario() != null && usuario.getClave() != null) {
+                // Comparar la clave ingresada (convertida a MD5) con la clave almacenada en la base de datos
+                String claveMD5 = convertirMD5(claveUsuario);
+            
+                return usuario.getClave().equalsIgnoreCase(claveMD5);
+            }
     
-    System.out.println(">>> SERVICIO - Usuario buscado: " + nombreUsuario);
-    System.out.println(">>> SERVICIO - Clave en BD (Largo " + (usuario != null ? usuario.getClave().length() : 0) + "): [" + (usuario != null ? usuario.getClave() : "null") + "]");
-    
-    String claveMD5Ingresada = convertirMD5(claveUsuario);
-    System.out.println(">>> SERVICIO - Hash generado de '" + claveUsuario + "': [" + claveMD5Ingresada + "]");
-
-    if (usuario != null && usuario.getIdUsuario() != 0) {
-        boolean coincide = usuario.getClave().trim().equalsIgnoreCase(claveMD5Ingresada.trim());
-        System.out.println(">>> SERVICIO - ¿Coinciden?: " + coincide);
-        return coincide;
+        return false;
     }
-    
-    return false;
-}
 
     private String convertirMD5(String input) {
         try {
