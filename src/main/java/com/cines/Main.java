@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.cines.control.ConectarBase;
-import com.cines.vista.MainFrame;
+import com.cines.vista.UsuarioFrame;
 
 // El programa ya no lee ni escribe archivos .dat.
 // Toda la informacion vive en la base de datos MySQL.
@@ -31,9 +31,10 @@ public class Main {
 
         System.out.println("Conexion establecida.");
 
+        // Hacemos que la aplicación inicie mostrando el Login
         SwingUtilities.invokeLater(() -> {
-            MainFrame ventana = new MainFrame();
-            ventana.setVisible(true);
+            UsuarioFrame login = new UsuarioFrame();
+            login.setVisible(true);
         });
     }
 
