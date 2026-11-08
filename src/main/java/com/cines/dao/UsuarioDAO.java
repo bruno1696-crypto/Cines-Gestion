@@ -4,32 +4,40 @@ package com.cines.dao;
 
 import com.cines.control.ConectarBase;
 import com.cines.modelo.Usuario;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UsuarioDAO {
 
     public Usuario leerUsuario(String nombreUsuario) {
-        
-        Usuario usuario = new Usuario();
+        Usuario usuario = null;
         String sql = "SELECT * FROM usuarios WHERE usuario = ?";
         
-        try {
-            var conexion = new ConectarBase().conectar();
-            var preparedStatement = conexion.prepareStatement(sql);
+        ConectarBase conectarBase = new ConectarBase();
+
+        try (Connection conexion = conectarBase.conectar();
+             PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
             
             preparedStatement.setString(1, nombreUsuario);
-            var resultSet = preparedStatement.executeQuery();
             
-            if (resultSet.next()) {
-                int idUsuario = resultSet.getInt("idUsuario");
-                String claveUsuario = resultSet.getString("clave");
-                usuario.setIdUsuario(idUsuario);
-                usuario.setUsuario(nombreUsuario);
-                usuario.setClave(claveUsuario);
-
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    usuario = new Usuario();
+                    usuario.setIdUsuario(resultSet.getInt("idUsuario"));
+                    usuario.setUsuario(resultSet.getString("usuario"));
+                    usuario.setClave(resultSet.getString("clave"));
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            System.err.println("Error de SQL al leer el usuario: " + e.getMessage());
             e.printStackTrace();
-            }             
+        } catch (Exception e) {
+            System.err.println("Error general al leer el usuario: " + e.getMessage());
+            e.printStackTrace();
+        }            
+        
         return usuario; 
-        }
     }
+}

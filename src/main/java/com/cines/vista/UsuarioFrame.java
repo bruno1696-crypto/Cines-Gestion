@@ -1,65 +1,73 @@
 package com.cines.vista;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 import com.cines.servicio.UsuarioServicio;
 import com.cines.servicio.impl.UsuarioServicioImpl;
 
 public class UsuarioFrame extends JFrame {
 
+    private JTextField txtUsuario;
+    private JPasswordField txtClave;
+    private JButton btnIngresar;
+
     public UsuarioFrame() {
-        setTitle("Ingreso al Sistema de Turismo");
-        setSize(300, 200);
+        setTitle("Acceso al Sistema - Cines Gestión");
+        setSize(320, 180);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new GridLayout(3, 2, 10, 10));
 
-        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
-        JLabel lblUsuario = new JLabel("Usuario:", SwingConstants.CENTER);
-        JTextField txtUsuario = new JTextField();
-        JLabel lblClave = new JLabel("Clave:", SwingConstants.CENTER);
-        JTextField txtClave = new JPasswordField();
-        JButton btnIngresar = new JButton("Ingresar");
+        // Inicialización de componentes
+        JLabel lblUsuario = new JLabel("  Usuario:");
+        txtUsuario = new JTextField();
 
-        panel.add(lblUsuario);
-        panel.add(txtUsuario);
-        panel.add(lblClave);
-        panel.add(txtClave);
-        panel.add(btnIngresar);
+        JLabel lblClave = new JLabel("  Clave:");
+        txtClave = new JPasswordField();
 
-        add(panel, BorderLayout.CENTER);
+        btnIngresar = new JButton("Ingresar");
 
-        btnIngresar.addActionListener(e -> {
-            String usuario = txtUsuario.getText();
-            String clave = txtClave.getText();
+        // Agregar elementos al panel principal
+        add(lblUsuario);
+        add(txtUsuario);
+        add(lblClave);
+        add(txtClave);
+        add(new JLabel("")); // Espacio vacío para alineación del botón
+        add(btnIngresar);
 
-            // Instanciamos la clase que implementa la interfaz
-            UsuarioServicio usuariosServicios = new UsuarioServicioImpl();
+        // Lógica del evento del botón Ingresar
+        btnIngresar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usuario = txtUsuario.getText().trim();
+                String clave = new String(txtClave.getPassword()).trim();
 
-            // Invocamos el método a través del objeto/instancia
-            boolean ingresoPermitido = usuariosServicios.validarUsuario(usuario, clave);
+                // Instanciamos el servicio correspondiente
+                UsuarioServicio usuarioServicio = new UsuarioServicioImpl();
+                
+                boolean ingresoPermitido = usuarioServicio.validarUsuario(usuario, clave);
 
-            // Si el ingreso es permitido, se muestra un mensaje de éxito y se abre la
-            // ventana principal
-            if (ingresoPermitido) {
-                JOptionPane.showMessageDialog(this, "Ingreso exitoso");
-                // Se abre la ventana principal de la aplicación
-                MainFrame mainFrame = new MainFrame();
-                mainFrame.setVisible(true);
-                this.dispose(); // Cierra la ventana de login
-            } else {
-                JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+                if (ingresoPermitido) {
+                    JOptionPane.showMessageDialog(UsuarioFrame.this, "¡Ingreso exitoso!");
+                    MainFrame mainFrame = new MainFrame();
+                    mainFrame.setVisible(true);
+                    dispose(); // Cierra la ventana de login
+                } else {
+                    JOptionPane.showMessageDialog(UsuarioFrame.this, 
+                            "Usuario o clave incorrectos", 
+                            "Error de Autenticación", 
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
-
 }

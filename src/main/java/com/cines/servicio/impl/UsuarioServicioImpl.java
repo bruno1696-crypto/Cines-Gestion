@@ -18,11 +18,16 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     public boolean validarUsuario(String nombreUsuario, String claveUsuario) {
-        UsuarioDAO usuariosDAO = new UsuarioDAO();
-        Usuario usuario = usuariosDAO.leerUsuario(nombreUsuario);
+        Usuario usuario = usuarioDAO.leerUsuario(nombreUsuario);
+        // --- IMPRIME ESTO EN CONSOLA ---
+        String claveMD5Ingresada = convertirMD5(claveUsuario);
+        System.out.println("Usuario buscado: " + nombreUsuario);
+        System.out.println("Clave en BD:     " + (usuario != null ? usuario.getClave() : "null"));
+        System.out.println("Clave generada:  " + claveMD5Ingresada);
+    // ---------------------------------
         // Verificar si el usuario existe y si la clave coincide
         // adicionalmente verificar que el ID del usuario no sea cero y que el nombre y la clave no sean nulos
-        if (usuario.getIdUsuario() != 0 && usuario.getUsuario() != null && usuario.getClave() != null) {
+        if (usuario != null && usuario.getIdUsuario() != 0) {
             // Comparar la clave ingresada (convertida a MD5) con la clave almacenada en la base de datos
             String claveMD5 = convertirMD5(claveUsuario);
             
