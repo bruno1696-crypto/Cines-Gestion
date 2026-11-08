@@ -14,7 +14,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.cines.Main;
 import com.cines.modelo.Pelicula;
 import com.cines.servicio.impl.PeliculaServicioImpl;
 
@@ -65,7 +64,7 @@ public class BuscarPeliculaFrame extends JFrame {
         }
 
         PeliculaServicioImpl servicio = new PeliculaServicioImpl();
-        Pelicula pelicula = servicio.buscarPorTitulo(titulo, Main.listaPeliculas);
+        Pelicula pelicula = servicio.buscarPorTitulo(titulo);
 
         if (pelicula == null) {
             areaResultado.setText("No se encontro ninguna pelicula con ese titulo.");

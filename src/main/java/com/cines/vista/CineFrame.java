@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.cines.Main;
 import com.cines.modelo.Cine;
 import com.cines.servicio.impl.CineServicioImpl;
 
@@ -111,10 +110,14 @@ public class CineFrame extends JFrame {
             Cine cine = new Cine(nombre, salas, abierto, fechaInauguracion);
 
             CineServicioImpl servicio = new CineServicioImpl();
-            servicio.agregarCine(cine, Main.listaCines);
 
-            JOptionPane.showMessageDialog(this, "Cine guardado correctamente.");
-            limpiarFormulario();
+            if (servicio.agregarCine(cine)) {
+                JOptionPane.showMessageDialog(this, "Cine guardado correctamente.");
+                limpiarFormulario();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo guardar el cine en la base de datos.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
 
         } catch (NumberFormatException ex) {
             // cheqeo si salas es numerico

@@ -8,10 +8,14 @@ import com.cines.modelo.Cine;
 
 public interface CineServicio {
 
-    void agregarCine(Cine cine, ArrayList<Cine> listaCines);
+    boolean agregarCine(Cine cine);
 
-    ArrayList<Cine> listarCines(ArrayList<Cine> listaCines);
+    ArrayList<Cine> listarCines();
 
-    Cine buscarPorNombre(String nombre, ArrayList<Cine> listaCines);
+    Cine buscarPorNombre(String nombre);
+
+    boolean actualizarCine(Cine cine);
+
+    boolean eliminarCine(int id);
 
 }

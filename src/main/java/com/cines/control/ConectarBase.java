@@ -8,26 +8,25 @@ import java.sql.SQLException;
 
 // conexion con la base de datos y driver de Mysql
 public class ConectarBase {
-    Connection conexion;
 
-    public ConectarBase() {
-        this.conexion = null;
+    // el driver se carga una sola vez cuando se usa la clase por primera vez
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new ExceptionInInitializerError("No se encontro el driver de MySQL: " + e.getMessage());
+        }
     }
 
-    public Connection conectar() throws InstantiationException, IllegalAccessException {
-        try {
-            // carga driver de Mysql sin framework de pro medio
-            Class.forName("com.mysql.cj.jdbc.Driver");
+    public ConectarBase() {
+    }
 
-            String url = Configuracion.BBDD_DRIVER + "://" + Configuracion.BBDD_IP + ":"
-                    + Configuracion.BBDD_PUERTO + "/" + Configuracion.BBDD_NOMBRE;
-            conexion = DriverManager.getConnection(url, Configuracion.BBDD_USUARIO, Configuracion.BBDD_PASSWORD);
-            // no imprimo "Conexion establecida" aca, se repetiria una vez por
-            // cada DAO que se conecta. El aviso unico se hace en Main
-        } catch (ClassNotFoundException | SQLException e) {
-            // no imprimi mensaje aca para que no se repita dos veces en la consola, ya que el error se maneja en el DAO
-        }
+    // devuelve una conexion nueva a MySQL. Si algo falla se propaga la excepcion
+    // para que el DAO que llamo pueda informar el error (no se oculta el problema)
+    public Connection conectar() throws SQLException {
+        String url = Configuracion.BBDD_DRIVER + "://" + Configuracion.BBDD_IP + ":"
+                + Configuracion.BBDD_PUERTO + "/" + Configuracion.BBDD_NOMBRE;
 
-        return conexion;
+        return DriverManager.getConnection(url, Configuracion.BBDD_USUARIO, Configuracion.BBDD_PASSWORD);
     }
 }

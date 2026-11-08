@@ -12,21 +12,16 @@ import java.util.ArrayList;
 import com.cines.control.ConectarBase;
 import com.cines.modelo.Cine;
 
-// PreparedStatement en vez de armar el SQL con concatenacion de Strings, evita quilombos 
-// si el nombre del cine tiene algun caracter raro
+// Toda la persistencia de Cine pasa por esta clase y por MySQL.
+// Se usa PreparedStatement en vez de armar el SQL con concatenacion de Strings
+// para evitar problemas con caracteres especiales y ataques de inyeccion SQL.
 public class CineDAO {
 
-    public void insertarCine(Cine cine) {
-        Connection conexion = obtenerConexion();
-        
-        if (conexion == null) { 
-            System.out.println("No se guardo el cine en la base de datos (sin conexion a MySQL).");
-            return;
-        }
-
+    public boolean insertarCine(Cine cine) {
         String sql = "INSERT INTO cine (nombre, salas, abierto, fechaInauguracion) VALUES (?, ?, ?, ?)";
 
-        try (conexion; PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+        try (Connection conexion = new ConectarBase().conectar();
+             PreparedStatement preparedStatement = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, cine.getNombre());
             preparedStatement.setInt(2, cine.getSalas());
@@ -34,35 +29,33 @@ public class CineDAO {
             // LocalDate no lo entiende JDBC directo, hay que pasarlo a java.sql.Date
             preparedStatement.setDate(4, java.sql.Date.valueOf(cine.getFechaInauguracion()));
 
-            preparedStatement.executeUpdate();
+            if (preparedStatement.executeUpdate() == 0) {
+                return false;
+            }
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    cine.setId(generatedKeys.getInt(1));
+                }
+            }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("No se pudo guardar el cine en la base de datos: " + e.getMessage());
+            return false;
         }
     }
 
     public ArrayList<Cine> obtenerCines() {
         ArrayList<Cine> listaCines = new ArrayList<>();
-        Connection conexion = obtenerConexion();
-        
-        if (conexion == null) {
-            return listaCines;
-        }
+        String sql = "SELECT id, nombre, salas, abierto, fechaInauguracion FROM cine ORDER BY id";
 
-        String sql = "SELECT * FROM cine";
-
-         try (conexion;
-             Statement statement = conexion.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
+        try (Connection conexion = new ConectarBase().conectar();
+             PreparedStatement preparedStatement = conexion.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                Cine cine = new Cine();
-                cine.setNombre(resultSet.getString("nombre"));
-                cine.setSalas(resultSet.getInt("salas"));
-                cine.setAbierto(resultSet.getBoolean("abierto"));
-                cine.setFechaInauguracion(resultSet.getDate("fechaInauguracion").toLocalDate());
-
-                listaCines.add(cine);
+                listaCines.add(mapearCine(resultSet));
             }
         } catch (SQLException e) {
             System.out.println("No se pudieron leer los cines de la base de datos: " + e.getMessage());
@@ -70,12 +63,87 @@ public class CineDAO {
         return listaCines;
     }
 
-    // metodo privado para no repetir codigo de conexion en cada metodo
-    private Connection obtenerConexion() {
-        try {
-            return new ConectarBase().conectar();
-        } catch (Exception e) {
-            return null;
+    public Cine obtenerCinePorId(int id) {
+        String sql = "SELECT id, nombre, salas, abierto, fechaInauguracion FROM cine WHERE id = ?";
+
+        try (Connection conexion = new ConectarBase().conectar();
+             PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapearCine(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("No se pudo buscar el cine por id: " + e.getMessage());
         }
+        return null;
+    }
+
+    public Cine buscarPorNombre(String nombre) {
+        String sql = "SELECT id, nombre, salas, abierto, fechaInauguracion FROM cine WHERE LOWER(nombre) = LOWER(?)";
+
+        try (Connection conexion = new ConectarBase().conectar();
+             PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, nombre);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapearCine(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("No se pudo buscar el cine por nombre: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public boolean actualizarCine(Cine cine) {
+        String sql = "UPDATE cine SET nombre = ?, salas = ?, abierto = ?, fechaInauguracion = ? WHERE id = ?";
+
+        try (Connection conexion = new ConectarBase().conectar();
+             PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, cine.getNombre());
+            preparedStatement.setInt(2, cine.getSalas());
+            preparedStatement.setBoolean(3, cine.isAbierto());
+            preparedStatement.setDate(4, java.sql.Date.valueOf(cine.getFechaInauguracion()));
+            preparedStatement.setInt(5, cine.getId());
+
+            return preparedStatement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("No se pudo actualizar el cine: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean eliminarCine(int id) {
+        String sql = "DELETE FROM cine WHERE id = ?";
+
+        try (Connection conexion = new ConectarBase().conectar();
+             PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, id);
+            return preparedStatement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("No se pudo eliminar el cine: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // arma un Cine a partir de una fila del ResultSet
+    private Cine mapearCine(ResultSet resultSet) throws SQLException {
+        Cine cine = new Cine();
+        cine.setId(resultSet.getInt("id"));
+        cine.setNombre(resultSet.getString("nombre"));
+        cine.setSalas(resultSet.getInt("salas"));
+        cine.setAbierto(resultSet.getBoolean("abierto"));
+        cine.setFechaInauguracion(resultSet.getDate("fechaInauguracion").toLocalDate());
+        return cine;
     }
 }

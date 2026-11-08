@@ -11,8 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import com.cines.Main;
-
 public class MainFrame extends JFrame {
 
     public MainFrame() {
@@ -30,8 +28,8 @@ public class MainFrame extends JFrame {
     private void inicializarComponentes() {
 
         JPanel panel = new JPanel();
-        // 8 filas para 6 botones de cines/peliculas + guardar + salir
-        panel.setLayout(new GridLayout(8, 1, 5, 5));
+        // 7 filas para 6 botones de cines/peliculas + salir
+        panel.setLayout(new GridLayout(7, 1, 5, 5));
 
         // -------------------------- BOTONES DE CINES -------------------------
         JButton btnAltaCine = new JButton("Gestionar Cines (Alta)");
@@ -77,16 +75,6 @@ public class MainFrame extends JFrame {
         btnBuscarPelicula.addActionListener(e -> {
             BuscarPeliculaFrame ventana = new BuscarPeliculaFrame();
             ventana.setVisible(true);
-        });
-
-        // ------------------------- BOTON GUARDAR -------------------------
-        JButton btnGuardar = new JButton("Guardar Datos");
-        panel.add(btnGuardar);
-        btnGuardar.addActionListener(e -> {
-            // Este es el unico lugar donde se escribe en los .dat, a proposito
-            // para que el guardado quede bajo control del usuario
-            Main.guardarDatos(Main.listaCines, Main.listaPeliculas);
-            javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados exitosamente.");
         });
 
         // ------------------------- BOTON SALIR -------------------------

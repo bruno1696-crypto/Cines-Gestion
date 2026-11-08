@@ -2,12 +2,12 @@
 
 package com.cines.modelo;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 
-public class Cine implements Serializable {
+public class Cine {
 
+    private int id;
     private String nombre;
     private int salas;
     private boolean abierto;
@@ -21,6 +21,22 @@ public class Cine implements Serializable {
         this.salas = salas;
         this.abierto = abierto;
         this.fechaInauguracion = fechaInauguracion;
+    }
+
+    public Cine(int id, String nombre, int salas, boolean abierto, LocalDate fechaInauguracion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.salas = salas;
+        this.abierto = abierto;
+        this.fechaInauguracion = fechaInauguracion;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -58,7 +74,7 @@ public class Cine implements Serializable {
     
     @Override
     public String toString() {
-        return "Cine [nombre=" + nombre + ", salas=" + salas + ", abierto=" + abierto
+        return "Cine [id=" + id + ", nombre=" + nombre + ", salas=" + salas + ", abierto=" + abierto
                 + ", fechaInauguracion=" + fechaInauguracion + "]";
     }
 

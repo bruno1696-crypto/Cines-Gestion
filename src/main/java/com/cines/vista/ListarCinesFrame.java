@@ -12,7 +12,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import com.cines.Main;
 import com.cines.modelo.Cine;
 import com.cines.servicio.impl.CineServicioImpl;
 
@@ -54,7 +53,7 @@ public class ListarCinesFrame extends JFrame {
     private void listarCines() {
         // se llama una sola vez, apenas se abre la ventana 
         CineServicioImpl servicio = new CineServicioImpl();
-        var listaCines = servicio.listarCines(Main.listaCines);
+        var listaCines = servicio.listarCines();
 
         if (listaCines.isEmpty()) {
             areaResultado.setText("No hay cines registrados.");

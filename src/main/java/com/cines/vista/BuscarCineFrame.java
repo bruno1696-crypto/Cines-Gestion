@@ -14,7 +14,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.cines.Main;
 import com.cines.modelo.Cine;
 import com.cines.servicio.impl.CineServicioImpl;
 
@@ -66,7 +65,7 @@ public class BuscarCineFrame extends JFrame {
         }
 
         CineServicioImpl servicio = new CineServicioImpl();
-        Cine cine = servicio.buscarPorNombre(nombre, Main.listaCines);
+        Cine cine = servicio.buscarPorNombre(nombre);
 
         if (cine == null) {
             areaResultado.setText("No se encontro ningun cine con ese nombre.");

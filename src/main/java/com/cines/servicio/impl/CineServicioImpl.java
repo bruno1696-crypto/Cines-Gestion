@@ -8,32 +8,35 @@ import com.cines.dao.CineDAO;
 import com.cines.modelo.Cine;
 import com.cines.servicio.CineServicio;
 
+// El servicio ya no mantiene listas en memoria: todas las operaciones
+// se delegan al DAO, que trabaja directamente contra MySQL.
 public class CineServicioImpl implements CineServicio {
 
-    private CineDAO cineDAO = new CineDAO();
+    private final CineDAO cineDAO = new CineDAO();
 
     @Override
-    public void agregarCine(Cine cine, ArrayList<Cine> listaCines) {
-        listaCines.add(cine);
-
-        // ademas de la lista en memoria, lo mando a la base. Si la conexion Mysql falla el DAO captura el error
-        cineDAO.insertarCine(cine);
+    public boolean agregarCine(Cine cine) {
+        return cineDAO.insertarCine(cine);
     }
 
     @Override
-    public ArrayList<Cine> listarCines(ArrayList<Cine> listaCines) {
-        return listaCines;
+    public ArrayList<Cine> listarCines() {
+        return cineDAO.obtenerCines();
     }
 
     @Override
-    public Cine buscarPorNombre(String nombre, ArrayList<Cine> listaCines) {
-        // recorrido simple usando for con equalsIgnoreCase para ignorar mayusculas/minusculas exactas
-        for (Cine cine : listaCines) {
-            if (cine.getNombre().equalsIgnoreCase(nombre)) {
-                return cine;
-            }
-        }
-        return null;
+    public Cine buscarPorNombre(String nombre) {
+        return cineDAO.buscarPorNombre(nombre);
+    }
+
+    @Override
+    public boolean actualizarCine(Cine cine) {
+        return cineDAO.actualizarCine(cine);
+    }
+
+    @Override
+    public boolean eliminarCine(int id) {
+        return cineDAO.eliminarCine(id);
     }
 
 }

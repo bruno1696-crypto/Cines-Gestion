@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.cines.Main;
 import com.cines.modelo.Pelicula;
 import com.cines.servicio.impl.PeliculaServicioImpl;
 
@@ -108,10 +107,14 @@ public class PeliculaFrame extends JFrame {
             Pelicula pelicula = new Pelicula(titulo, duracion, disponible, fechaEstreno);
 
             PeliculaServicioImpl servicio = new PeliculaServicioImpl();
-            servicio.agregarPelicula(pelicula, Main.listaPeliculas);
 
-            JOptionPane.showMessageDialog(this, "Pelicula guardada correctamente.");
-            limpiarFormulario();
+            if (servicio.agregarPelicula(pelicula)) {
+                JOptionPane.showMessageDialog(this, "Pelicula guardada correctamente.");
+                limpiarFormulario();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo guardar la pelicula en la base de datos.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "La duracion debe ser numerica.", "Error",
