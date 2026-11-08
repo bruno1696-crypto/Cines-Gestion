@@ -20,13 +20,16 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     public boolean validarUsuario(String nombreUsuario, String claveUsuario) {
     Usuario usuario = usuarioDAO.leerUsuario(nombreUsuario);
     
-    // Verificamos que el usuario exista
+    System.out.println(">>> SERVICIO - Usuario buscado: " + nombreUsuario);
+    System.out.println(">>> SERVICIO - Clave en BD (Largo " + (usuario != null ? usuario.getClave().length() : 0) + "): [" + (usuario != null ? usuario.getClave() : "null") + "]");
+    
+    String claveMD5Ingresada = convertirMD5(claveUsuario);
+    System.out.println(">>> SERVICIO - Hash generado de '" + claveUsuario + "': [" + claveMD5Ingresada + "]");
+
     if (usuario != null && usuario.getIdUsuario() != 0) {
-        // Convertimos la clave ingresada (ej: cines123) a MD5
-        String claveMD5Ingresada = convertirMD5(claveUsuario);
-        
-        // Comparamos el hash generado con el hash que está en la base de datos
-        return usuario.getClave().equalsIgnoreCase(claveMD5Ingresada);
+        boolean coincide = usuario.getClave().trim().equalsIgnoreCase(claveMD5Ingresada.trim());
+        System.out.println(">>> SERVICIO - ¿Coinciden?: " + coincide);
+        return coincide;
     }
     
     return false;
