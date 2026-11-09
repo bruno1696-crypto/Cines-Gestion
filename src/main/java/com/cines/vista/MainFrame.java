@@ -13,11 +13,13 @@ import javax.swing.SwingConstants;
 
 public class MainFrame extends JFrame {
 
+    // Constructor del menu principal del sistema
     public MainFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Sistema de Gestion de Cines");
         setSize(420, 400);
@@ -25,11 +27,12 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Crea los botones de acceso a cada pantalla del sistema
     private void inicializarComponentes() {
 
         JPanel panel = new JPanel();
-        // 7 filas para 6 botones de cines/peliculas + salir
-        panel.setLayout(new GridLayout(7, 1, 5, 5));
+        // 7 filas para 6 botones de cines/peliculas + funciones + salir
+        panel.setLayout(new GridLayout(8, 1, 5, 5));
 
         // -------------------------- BOTONES DE CINES -------------------------
         JButton btnAltaCine = new JButton("Gestionar Cines (Alta)");
@@ -75,6 +78,14 @@ public class MainFrame extends JFrame {
         btnBuscarPelicula.addActionListener(e -> {
             BuscarPeliculaFrame ventana = new BuscarPeliculaFrame();
             ventana.setVisible(true);
+        });
+
+        // -------------------------- BOTON FUNCIONES -------------------------
+        JButton btnGestionFunciones = new JButton("Gestion de Funciones");
+        panel.add(btnGestionFunciones);
+        btnGestionFunciones.addActionListener(e -> {
+            FuncionFrame funcionFrame = new FuncionFrame();
+            funcionFrame.setVisible(true);
         });
 
         // ------------------------- BOTON SALIR -------------------------

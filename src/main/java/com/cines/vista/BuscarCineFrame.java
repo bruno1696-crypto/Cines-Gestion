@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.cines.control.ValidarDato;
 import com.cines.modelo.Cine;
 import com.cines.servicio.impl.CineServicioImpl;
 
@@ -22,11 +23,13 @@ public class BuscarCineFrame extends JFrame {
     private JTextField txtNombre;
     private JTextArea areaResultado;
 
+    // Constructor de la ventana de busqueda de cines
     public BuscarCineFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Buscar Cine");
         setSize(420, 320);
@@ -34,6 +37,7 @@ public class BuscarCineFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Crea y ubica los componentes graficos de la ventana
     private void inicializarComponentes() {
         JPanel panelBusqueda = new JPanel(new FlowLayout());
         panelBusqueda.add(new JLabel("Nombre del cine:"));
@@ -55,12 +59,17 @@ public class BuscarCineFrame extends JFrame {
         btnBuscar.addActionListener(e -> buscarCine());
     }
 
+    // Valida el nombre con una expresion regular y busca el cine por nombre
     private void buscarCine() {
         String nombre = txtNombre.getText().trim();
 
-        // por si hay campo vacio, no se hace la busqueda
         if (nombre.isEmpty()) {
             areaResultado.setText("Ingrese un nombre para buscar.");
+            return;
+        }
+
+        if (!ValidarDato.validarNombreCine(nombre)) {
+            areaResultado.setText("El nombre solo puede contener letras, numeros y espacios.");
             return;
         }
 

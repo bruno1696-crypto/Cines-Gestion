@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.cines.control.ValidarDato;
 import com.cines.modelo.Pelicula;
 import com.cines.servicio.impl.PeliculaServicioImpl;
 
@@ -30,11 +31,13 @@ public class PeliculaFrame extends JFrame {
     private JButton btnGuardar;
     private JButton btnVolver;
 
+    // Constructor del formulario de alta de peliculas
     public PeliculaFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Alta de Pelicula");
         setSize(400, 300);
@@ -42,6 +45,7 @@ public class PeliculaFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Crea y ubica los componentes graficos del formulario
     private void inicializarComponentes() {
         JPanel panelPrincipal = new JPanel(new BorderLayout());
 
@@ -74,6 +78,7 @@ public class PeliculaFrame extends JFrame {
 
         add(panelPrincipal, BorderLayout.CENTER);
 
+        // Etiqueta con el nombre del alumno
         JLabel lblAlumno = new JLabel("Bruno Mercado", SwingConstants.RIGHT);
         add(lblAlumno, BorderLayout.SOUTH);
 
@@ -81,28 +86,49 @@ public class PeliculaFrame extends JFrame {
         btnVolver.addActionListener(e -> volver());
     }
 
+    // Cierra el formulario y regresa al menu principal
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Valida los datos con expresiones regulares y guarda la pelicula en la base
     private void guardarPelicula() {
         try {
             String titulo = txtTitulo.getText().trim();
+            String duracionTxt = txtDuracion.getText().trim();
+            String fechaTxt = txtFechaEstreno.getText().trim();
 
-            if (titulo.isEmpty() || txtDuracion.getText().trim().isEmpty()
-                    || txtFechaEstreno.getText().trim().isEmpty()) {
+            if (titulo.isEmpty() || duracionTxt.isEmpty() || fechaTxt.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            int duracion = Integer.parseInt(txtDuracion.getText().trim());
+            if (!ValidarDato.validarTituloPelicula(titulo)) {
+                JOptionPane.showMessageDialog(this, "El titulo contiene caracteres no permitidos.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!ValidarDato.validarEnteroPositivo(duracionTxt)) {
+                JOptionPane.showMessageDialog(this, "La duracion debe ser un numero entero positivo.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!ValidarDato.validarFecha(fechaTxt)) {
+                JOptionPane.showMessageDialog(this, "La fecha debe tener el formato dd/MM/yyyy.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int duracion = Integer.parseInt(duracionTxt);
             boolean disponible = chkDisponible.isSelected();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate fechaEstreno = LocalDate.parse(txtFechaEstreno.getText().trim(), formatter);
+            LocalDate fechaEstreno = LocalDate.parse(fechaTxt, formatter);
 
             Pelicula pelicula = new Pelicula(titulo, duracion, disponible, fechaEstreno);
 
@@ -116,14 +142,8 @@ public class PeliculaFrame extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
 
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "La duracion debe ser numerica.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            txtDuracion.setText("");
-            txtDuracion.requestFocus();
-
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(this, "La fecha debe tener el formato dd/MM/yyyy.", "Error",
+            JOptionPane.showMessageDialog(this, "La fecha ingresada no es valida.", "Error",
                     JOptionPane.ERROR_MESSAGE);
             txtFechaEstreno.setText("");
             txtFechaEstreno.requestFocus();
@@ -133,6 +153,7 @@ public class PeliculaFrame extends JFrame {
         }
     }
 
+    // Limpia todos los campos del formulario
     private void limpiarFormulario() {
         txtTitulo.setText("");
         txtDuracion.setText("");

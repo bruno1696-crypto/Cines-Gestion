@@ -3,6 +3,7 @@
 package com.cines.vista;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,12 +20,14 @@ public class ListarPeliculasFrame extends JFrame {
 
     private JTextArea areaResultado;
 
+    // Constructor de la ventana de listado de peliculas
     public ListarPeliculasFrame() {
         configurarVentana();
         inicializarComponentes();
         listarPeliculas();
     }
 
+    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Listado de Peliculas");
         setSize(450, 350);
@@ -32,6 +35,7 @@ public class ListarPeliculasFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Crea y ubica los componentes graficos de la ventana
     private void inicializarComponentes() {
         areaResultado = new JTextArea();
         areaResultado.setEditable(false);
@@ -50,10 +54,10 @@ public class ListarPeliculasFrame extends JFrame {
         add(panelInferior, BorderLayout.SOUTH);
     }
 
+    // Obtiene el listado de peliculas y lo muestra en el area de texto
     private void listarPeliculas() {
-        // igual que en ListarCinesFrame
         PeliculaServicioImpl servicio = new PeliculaServicioImpl();
-        var listaPeliculas = servicio.listarPeliculas();
+        ArrayList<Pelicula> listaPeliculas = servicio.listarPeliculas();
 
         if (listaPeliculas.isEmpty()) {
             areaResultado.setText("No hay peliculas registradas.");

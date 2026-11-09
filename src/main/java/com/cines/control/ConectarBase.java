@@ -18,6 +18,7 @@ public class ConectarBase {
         }
     }
 
+    // Constructor vacio de la clase de conexion
     public ConectarBase() {
     }
 

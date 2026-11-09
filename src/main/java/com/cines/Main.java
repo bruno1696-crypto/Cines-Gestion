@@ -9,12 +9,15 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.cines.control.ConectarBase;
+import com.cines.servicio.SalaServicio;
+import com.cines.servicio.impl.SalaServicioImpl;
 import com.cines.vista.UsuarioFrame;
 
 // El programa ya no lee ni escribe archivos .dat.
 // Toda la informacion vive en la base de datos MySQL.
 public class Main {
 
+    // Punto de entrada: verifica la conexion, prepara las salas y abre el login
     public static void main(String[] args) {
 
         System.out.println("Iniciando programa.");
@@ -30,6 +33,14 @@ public class Main {
         }
 
         System.out.println("Conexion establecida.");
+
+        // completa las salas de los cines que ya existian antes de esta mejora,
+        // comparando contra la cantidad indicada en cine.salas. Es idempotente.
+        SalaServicio salaServicio = new SalaServicioImpl();
+        int salasGeneradas = salaServicio.generarSalasFaltantes();
+        if (salasGeneradas > 0) {
+            System.out.println("Se generaron " + salasGeneradas + " salas faltantes para cines existentes.");
+        }
 
         // Hacemos que la aplicación inicie mostrando el Login
         SwingUtilities.invokeLater(() -> {

@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.cines.control.ValidarDato;
 import com.cines.modelo.Cine;
 import com.cines.servicio.impl.CineServicioImpl;
 
@@ -24,28 +25,32 @@ public class CineFrame extends JFrame {
 
     private JTextField txtNombre;
     private JTextField txtSalas;
+    private JTextField txtCapacidad;
     private JCheckBox chkAbierto;
     private JTextField txtFechaInauguracion;
 
     private JButton btnGuardar;
     private JButton btnVolver;
 
+    // Constructor del formulario de alta de cines
     public CineFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Alta de Cine");
-        setSize(400, 300);
+        setSize(420, 340);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
+    // Crea y ubica los componentes graficos del formulario
     private void inicializarComponentes() {
         JPanel panelPrincipal = new JPanel(new BorderLayout());
 
-        JPanel panelFormulario = new JPanel(new GridLayout(4, 2, 20, 15));
+        JPanel panelFormulario = new JPanel(new GridLayout(5, 2, 20, 15));
 
         panelFormulario.add(new JLabel("Nombre:", SwingConstants.CENTER));
         txtNombre = new JTextField();
@@ -54,6 +59,10 @@ public class CineFrame extends JFrame {
         panelFormulario.add(new JLabel("Cantidad de salas:", SwingConstants.CENTER));
         txtSalas = new JTextField();
         panelFormulario.add(txtSalas);
+
+        panelFormulario.add(new JLabel("Capacidad por sala:", SwingConstants.CENTER));
+        txtCapacidad = new JTextField("100");
+        panelFormulario.add(txtCapacidad);
 
         panelFormulario.add(new JLabel("Abierto:", SwingConstants.CENTER));
         chkAbierto = new JCheckBox();
@@ -74,7 +83,7 @@ public class CineFrame extends JFrame {
 
         add(panelPrincipal, BorderLayout.CENTER);
 
-        // etiqueta con mi nombre
+        // Etiqueta con el nombre del alumno
         JLabel lblAlumno = new JLabel("Bruno Mercado", SwingConstants.RIGHT);
         add(lblAlumno, BorderLayout.SOUTH);
 
@@ -82,36 +91,63 @@ public class CineFrame extends JFrame {
         btnVolver.addActionListener(e -> volver());
     }
 
+    // Cierra el formulario y regresa al menu principal
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Valida los datos con expresiones regulares y guarda el cine en la base
     private void guardarCine() {
         try {
             String nombre = txtNombre.getText().trim();
+            String salasTxt = txtSalas.getText().trim();
+            String capacidadTxt = txtCapacidad.getText().trim();
+            String fechaTxt = txtFechaInauguracion.getText().trim();
 
-            // chequeo de campos vacios 
-            if (nombre.isEmpty() || txtSalas.getText().trim().isEmpty()
-                    || txtFechaInauguracion.getText().trim().isEmpty()) {
+            if (nombre.isEmpty() || salasTxt.isEmpty() || capacidadTxt.isEmpty() || fechaTxt.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            int salas = Integer.parseInt(txtSalas.getText().trim());
+            if (!ValidarDato.validarNombreCine(nombre)) {
+                JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras, numeros y espacios.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!ValidarDato.validarEnteroPositivo(salasTxt)) {
+                JOptionPane.showMessageDialog(this, "La cantidad de salas debe ser un numero entero positivo.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!ValidarDato.validarEnteroPositivo(capacidadTxt)) {
+                JOptionPane.showMessageDialog(this, "La capacidad debe ser un numero entero positivo.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!ValidarDato.validarFecha(fechaTxt)) {
+                JOptionPane.showMessageDialog(this, "La fecha debe tener el formato dd/MM/yyyy.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int salas = Integer.parseInt(salasTxt);
+            int capacidad = Integer.parseInt(capacidadTxt);
             boolean abierto = chkAbierto.isSelected();
 
-            // pasar fecha de String a LocalDate
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate fechaInauguracion = LocalDate.parse(txtFechaInauguracion.getText().trim(), formatter);
+            LocalDate fechaInauguracion = LocalDate.parse(fechaTxt, formatter);
 
             Cine cine = new Cine(nombre, salas, abierto, fechaInauguracion);
 
             CineServicioImpl servicio = new CineServicioImpl();
 
-            if (servicio.agregarCine(cine)) {
+            if (servicio.agregarCine(cine, capacidad)) {
                 JOptionPane.showMessageDialog(this, "Cine guardado correctamente.");
                 limpiarFormulario();
             } else {
@@ -119,15 +155,8 @@ public class CineFrame extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
 
-        } catch (NumberFormatException ex) {
-            // cheqeo si salas es numerico
-            JOptionPane.showMessageDialog(this, "La cantidad de salas debe ser numerica.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            txtSalas.setText("");
-            txtSalas.requestFocus();
-
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(this, "La fecha debe tener el formato dd/MM/yyyy.", "Error",
+            JOptionPane.showMessageDialog(this, "La fecha ingresada no es valida.", "Error",
                     JOptionPane.ERROR_MESSAGE);
             txtFechaInauguracion.setText("");
             txtFechaInauguracion.requestFocus();
@@ -137,9 +166,11 @@ public class CineFrame extends JFrame {
         }
     }
 
+    // Limpia todos los campos del formulario
     private void limpiarFormulario() {
         txtNombre.setText("");
         txtSalas.setText("");
+        txtCapacidad.setText("100");
         chkAbierto.setSelected(false);
         txtFechaInauguracion.setText("");
         txtNombre.requestFocus();

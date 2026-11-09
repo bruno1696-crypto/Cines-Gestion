@@ -7,32 +7,28 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 
-
 import com.cines.dao.UsuarioDAO;
 import com.cines.modelo.Usuario;
 import com.cines.servicio.UsuarioServicio;
 
+// Implementacion del servicio de usuarios, valida las credenciales contra el DAO
 public class UsuarioServicioImpl implements UsuarioServicio {
 
-    
-
+    // Verifica que el usuario exista y que la clave coincida con el hash MD5 almacenado
     @Override
     public boolean validarUsuario(String nombreUsuario, String claveUsuario) {
         UsuarioDAO usuariosDAO = new UsuarioDAO();
         Usuario usuario = usuariosDAO.leerUsuario(nombreUsuario);
-        
-        // Verificar si el usuario existe y si la clave coincide
-        // adicionalmente verificar que el ID del usuario no sea cero y que el nombre y la clave no sean nulos
-            if (usuario.getIdUsuario() != 0 && usuario.getUsuario() != null && usuario.getClave() != null) {
-                // Comparar la clave ingresada (convertida a MD5) con la clave almacenada en la base de datos
-                String claveMD5 = convertirMD5(claveUsuario);
-            
-                return usuario.getClave().equalsIgnoreCase(claveMD5);
-            }
-    
+
+        if (usuario.getIdUsuario() != 0 && usuario.getUsuario() != null && usuario.getClave() != null) {
+            String claveMD5 = convertirMD5(claveUsuario);
+            return usuario.getClave().equalsIgnoreCase(claveMD5);
+        }
+
         return false;
     }
 
+    // Convierte un texto plano a su hash MD5 en formato hexadecimal
     private String convertirMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -42,5 +38,4 @@ public class UsuarioServicioImpl implements UsuarioServicio {
             throw new RuntimeException("Error al encriptar en MD5", e);
         }
     }
-
 }

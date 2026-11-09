@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.cines.control.ValidarDato;
 import com.cines.modelo.Pelicula;
 import com.cines.servicio.impl.PeliculaServicioImpl;
 
@@ -22,11 +23,13 @@ public class BuscarPeliculaFrame extends JFrame {
     private JTextField txtTitulo;
     private JTextArea areaResultado;
 
+    // Constructor de la ventana de busqueda de peliculas
     public BuscarPeliculaFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Buscar Pelicula");
         setSize(420, 320);
@@ -34,6 +37,7 @@ public class BuscarPeliculaFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Crea y ubica los componentes graficos de la ventana
     private void inicializarComponentes() {
         JPanel panelBusqueda = new JPanel(new FlowLayout());
         panelBusqueda.add(new JLabel("Titulo de la pelicula:"));
@@ -55,11 +59,17 @@ public class BuscarPeliculaFrame extends JFrame {
         btnBuscar.addActionListener(e -> buscarPelicula());
     }
 
+    // Valida el titulo con una expresion regular y busca la pelicula por titulo
     private void buscarPelicula() {
         String titulo = txtTitulo.getText().trim();
 
         if (titulo.isEmpty()) {
             areaResultado.setText("Ingrese un titulo para buscar.");
+            return;
+        }
+
+        if (!ValidarDato.validarTituloPelicula(titulo)) {
+            areaResultado.setText("El titulo contiene caracteres no permitidos.");
             return;
         }
 

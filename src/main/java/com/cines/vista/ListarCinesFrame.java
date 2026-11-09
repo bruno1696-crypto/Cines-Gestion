@@ -3,6 +3,7 @@
 package com.cines.vista;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,12 +20,14 @@ public class ListarCinesFrame extends JFrame {
 
     private JTextArea areaResultado;
 
+    // Constructor de la ventana de listado de cines
     public ListarCinesFrame() {
         configurarVentana();
         inicializarComponentes();
         listarCines();
     }
 
+    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Listado de Cines");
         setSize(450, 350);
@@ -32,6 +35,7 @@ public class ListarCinesFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Crea y ubica los componentes graficos de la ventana
     private void inicializarComponentes() {
         areaResultado = new JTextArea();
         areaResultado.setEditable(false);
@@ -50,10 +54,10 @@ public class ListarCinesFrame extends JFrame {
         add(panelInferior, BorderLayout.SOUTH);
     }
 
+    // Obtiene el listado de cines y lo muestra en el area de texto
     private void listarCines() {
-        // se llama una sola vez, apenas se abre la ventana 
         CineServicioImpl servicio = new CineServicioImpl();
-        var listaCines = servicio.listarCines();
+        ArrayList<Cine> listaCines = servicio.listarCines();
 
         if (listaCines.isEmpty()) {
             areaResultado.setText("No hay cines registrados.");
