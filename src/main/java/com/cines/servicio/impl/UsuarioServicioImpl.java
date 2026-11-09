@@ -11,10 +11,8 @@ import com.cines.dao.UsuarioDAO;
 import com.cines.modelo.Usuario;
 import com.cines.servicio.UsuarioServicio;
 
-// Implementacion del servicio de usuarios, valida las credenciales contra el DAO
 public class UsuarioServicioImpl implements UsuarioServicio {
 
-    // Verifica que el usuario exista y que la clave coincida con el hash MD5 almacenado
     @Override
     public boolean validarUsuario(String nombreUsuario, String claveUsuario) {
         UsuarioDAO usuariosDAO = new UsuarioDAO();
@@ -28,7 +26,6 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         return false;
     }
 
-    // Convierte un texto plano a su hash MD5 en formato hexadecimal
     private String convertirMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

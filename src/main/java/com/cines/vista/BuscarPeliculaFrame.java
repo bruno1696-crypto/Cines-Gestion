@@ -4,6 +4,7 @@ package com.cines.vista;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,24 +24,21 @@ public class BuscarPeliculaFrame extends JFrame {
     private JTextField txtTitulo;
     private JTextArea areaResultado;
 
-    // Constructor de la ventana de busqueda de peliculas
     public BuscarPeliculaFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
-    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
-        setTitle("Buscar Pelicula");
+        setTitle("Buscar Película");
         setSize(420, 320);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
-    // Crea y ubica los componentes graficos de la ventana
     private void inicializarComponentes() {
         JPanel panelBusqueda = new JPanel(new FlowLayout());
-        panelBusqueda.add(new JLabel("Titulo de la pelicula:"));
+        panelBusqueda.add(new JLabel("Título de la película:"));
         txtTitulo = new JTextField(15);
         panelBusqueda.add(txtTitulo);
 
@@ -53,33 +51,49 @@ public class BuscarPeliculaFrame extends JFrame {
         areaResultado.setEditable(false);
         add(new JScrollPane(areaResultado), BorderLayout.CENTER);
 
+        JPanel panelInferior = new JPanel(new BorderLayout());
+
+        JButton btnVolver = new JButton("Volver");
+        btnVolver.addActionListener(e -> volver());
+        panelInferior.add(btnVolver, BorderLayout.WEST);
+
         JLabel lblAlumno = new JLabel("Bruno Mercado", SwingConstants.RIGHT);
-        add(lblAlumno, BorderLayout.SOUTH);
+        panelInferior.add(lblAlumno, BorderLayout.EAST);
+
+        add(panelInferior, BorderLayout.SOUTH);
 
         btnBuscar.addActionListener(e -> buscarPelicula());
     }
 
-    // Valida el titulo con una expresion regular y busca la pelicula por titulo
+    private void volver() {
+        this.dispose();
+        MainFrame ventanaPrincipal = new MainFrame();
+        ventanaPrincipal.setVisible(true);
+    }
+
     private void buscarPelicula() {
         String titulo = txtTitulo.getText().trim();
 
         if (titulo.isEmpty()) {
-            areaResultado.setText("Ingrese un titulo para buscar.");
+            areaResultado.setText("Ingrese un título para buscar.");
             return;
         }
 
         if (!ValidarDato.validarTituloPelicula(titulo)) {
-            areaResultado.setText("El titulo contiene caracteres no permitidos.");
+            areaResultado.setText("El título contiene caracteres no permitidos.");
             return;
         }
 
         PeliculaServicioImpl servicio = new PeliculaServicioImpl();
-        Pelicula pelicula = servicio.buscarPorTitulo(titulo);
+        ArrayList<Pelicula> coincidencias = servicio.buscarPorTitulo(titulo);
 
-        if (pelicula == null) {
-            areaResultado.setText("No se encontro ninguna pelicula con ese titulo.");
+        if (coincidencias.isEmpty()) {
+            areaResultado.setText("No se encontró ninguna película con ese título.");
         } else {
-            areaResultado.setText("Pelicula encontrada:\n" + pelicula.toString());
+            areaResultado.setText("Películas encontradas: " + coincidencias.size() + "\n\n");
+            for (Pelicula pelicula : coincidencias) {
+                areaResultado.append(pelicula.toString() + "\n");
+            }
         }
     }
 

@@ -1,4 +1,5 @@
 // Bruno Mercado
+
 package com.cines.vista;
 
 import java.awt.BorderLayout;
@@ -25,9 +26,8 @@ public class UsuarioFrame extends JFrame {
     private JPasswordField txtClave;
     private JButton btnIngresar;
 
-    // Constructor de la ventana de acceso (login)
     public UsuarioFrame() {
-        setTitle("Acceso al Sistema - Cines Gestion");
+        setTitle("Acceso al Sistema - Cines Gestión");
         setSize(320, 180);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -35,7 +35,6 @@ public class UsuarioFrame extends JFrame {
 
         JPanel panelFormulario = new JPanel(new GridLayout(3, 2, 10, 10));
 
-        // Inicializacion de componentes
         JLabel lblUsuario = new JLabel("  Usuario:");
         txtUsuario = new JTextField();
 
@@ -44,12 +43,11 @@ public class UsuarioFrame extends JFrame {
 
         btnIngresar = new JButton("Ingresar");
 
-        // Agregar elementos al panel principal
         panelFormulario.add(lblUsuario);
         panelFormulario.add(txtUsuario);
         panelFormulario.add(lblClave);
         panelFormulario.add(txtClave);
-        panelFormulario.add(new JLabel("")); // Espacio vacio para alineacion del boton
+        panelFormulario.add(new JLabel(""));
         panelFormulario.add(btnIngresar);
 
         add(panelFormulario, BorderLayout.CENTER);
@@ -57,10 +55,8 @@ public class UsuarioFrame extends JFrame {
         JLabel lblAlumno = new JLabel("Bruno Mercado", SwingConstants.RIGHT);
         add(lblAlumno, BorderLayout.SOUTH);
 
-        // Logica del evento del boton Ingresar
         btnIngresar.addActionListener(new ActionListener() {
 
-            // Valida el formato de los datos y controla el acceso del usuario
             @Override
             public void actionPerformed(ActionEvent e) {
                 String usuario = txtUsuario.getText().trim();
@@ -68,15 +64,15 @@ public class UsuarioFrame extends JFrame {
 
                 if (!ValidarDato.validarUsuario(usuario)) {
                     JOptionPane.showMessageDialog(UsuarioFrame.this,
-                            "El usuario debe tener entre 3 y 50 caracteres (letras, numeros, punto, guion o guion bajo).",
-                            "Error de validacion", JOptionPane.ERROR_MESSAGE);
+                            "El usuario debe tener entre 3 y 50 caracteres (letras, números, punto, guion o guion bajo).",
+                            "Error de validación", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 if (!ValidarDato.validarClave(clave)) {
                     JOptionPane.showMessageDialog(UsuarioFrame.this,
                             "La clave debe tener entre 4 y 50 caracteres sin espacios.",
-                            "Error de validacion", JOptionPane.ERROR_MESSAGE);
+                            "Error de validación", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -88,11 +84,11 @@ public class UsuarioFrame extends JFrame {
                     JOptionPane.showMessageDialog(UsuarioFrame.this, "Ingreso exitoso.");
                     MainFrame mainFrame = new MainFrame();
                     mainFrame.setVisible(true);
-                    dispose(); // Cierra la ventana de login
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(UsuarioFrame.this,
                             "Usuario o clave incorrectos",
-                            "Error de Autenticacion",
+                            "Error de Autenticación",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }

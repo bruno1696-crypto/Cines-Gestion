@@ -1,18 +1,21 @@
 // Bruno Mercado
+
 package com.cines.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.cines.control.ConectarBase;
 import com.cines.modelo.Sala;
-import java.sql.*;
-import java.util.ArrayList;
 
-// Persistencia de la entidad Sala contra la tabla 'sala' de MySQL
 public class SalaDAO {
 
-    // Capacidad usada cuando hay que generar salas sin un dato explicito
     public static final int CAPACIDAD_POR_DEFECTO = 100;
 
-    // Inserta una nueva sala en la base de datos
     public boolean insertarSala(Sala sala) {
         String sql = "INSERT INTO sala (cine_id, nombre, capacidad) VALUES (?, ?, ?)";
 
@@ -39,7 +42,6 @@ public class SalaDAO {
         }
     }
 
-    // Devuelve el listado completo de salas
     public ArrayList<Sala> listarSalas() {
         ArrayList<Sala> lista = new ArrayList<>();
         String sql = "SELECT * FROM sala ORDER BY id";
@@ -57,7 +59,6 @@ public class SalaDAO {
         return lista;
     }
 
-    // Devuelve las salas que pertenecen a un cine determinado
     public ArrayList<Sala> listarSalasPorCine(int cineId) {
         ArrayList<Sala> lista = new ArrayList<>();
         String sql = "SELECT * FROM sala WHERE cine_id = ? ORDER BY id";
@@ -77,7 +78,6 @@ public class SalaDAO {
         return lista;
     }
 
-    // Busca una sala por su identificador y la devuelve, o null si no existe
     public Sala obtenerSalaPorId(int id) {
         String sql = "SELECT * FROM sala WHERE id = ?";
 
@@ -97,7 +97,6 @@ public class SalaDAO {
         return null;
     }
 
-    // Actualiza los datos de una sala existente
     public boolean actualizarSala(Sala sala) {
         String sql = "UPDATE sala SET cine_id = ?, nombre = ?, capacidad = ? WHERE id = ?";
 
@@ -116,7 +115,6 @@ public class SalaDAO {
         }
     }
 
-    // Elimina una sala por su identificador
     public boolean eliminarSala(int id) {
         String sql = "DELETE FROM sala WHERE id = ?";
 
@@ -131,12 +129,10 @@ public class SalaDAO {
         }
     }
 
-    // Crea 'cantidad' salas para un cine, numeradas desde 1
     public boolean crearSalasParaCine(int cineId, int cantidad, int capacidad) {
         return crearSalas(cineId, 1, cantidad, capacidad) == cantidad;
     }
 
-    // Crea salas numeradas a partir de 'desdeNumero' y devuelve cuantas se crearon
     private int crearSalas(int cineId, int desdeNumero, int cantidad, int capacidad) {
         if (cantidad <= 0) {
             return 0;
@@ -203,7 +199,6 @@ public class SalaDAO {
         return creadas;
     }
 
-    // Arma un objeto Sala a partir de una fila del ResultSet
     private Sala mapearSala(ResultSet rs) throws SQLException {
         Sala sala = new Sala();
         sala.setId(rs.getInt("id"));

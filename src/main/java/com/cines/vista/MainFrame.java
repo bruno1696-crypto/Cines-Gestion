@@ -13,82 +13,51 @@ import javax.swing.SwingConstants;
 
 public class MainFrame extends JFrame {
 
-    // Constructor del menu principal del sistema
     public MainFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
-    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
-        setTitle("Sistema de Gestion de Cines");
+        setTitle("Sistema de Gestión de Cines");
         setSize(420, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
-    // Crea los botones de acceso a cada pantalla del sistema
     private void inicializarComponentes() {
 
         JPanel panel = new JPanel();
-        // 7 filas para 6 botones de cines/peliculas + funciones + salir
         panel.setLayout(new GridLayout(8, 1, 5, 5));
 
-        // -------------------------- BOTONES DE CINES -------------------------
         JButton btnAltaCine = new JButton("Gestionar Cines (Alta)");
         panel.add(btnAltaCine);
-        btnAltaCine.addActionListener(e -> {
-            CineFrame ventana = new CineFrame();
-            ventana.setVisible(true);
-            this.dispose();
-        });
+        btnAltaCine.addActionListener(e -> abrirVentana(new CineFrame()));
 
         JButton btnListarCines = new JButton("Listar Cines");
         panel.add(btnListarCines);
-        btnListarCines.addActionListener(e -> {
-            ListarCinesFrame ventana = new ListarCinesFrame();
-            ventana.setVisible(true);
-        });
+        btnListarCines.addActionListener(e -> abrirVentana(new ListarCinesFrame()));
 
         JButton btnBuscarCine = new JButton("Buscar Cine");
         panel.add(btnBuscarCine);
-        btnBuscarCine.addActionListener(e -> {
-            BuscarCineFrame ventana = new BuscarCineFrame();
-            ventana.setVisible(true);
-        });
+        btnBuscarCine.addActionListener(e -> abrirVentana(new BuscarCineFrame()));
 
-        // -------------------------- BOTONES DE PELICULAS -------------------------
-        JButton btnAltaPelicula = new JButton("Gestionar Peliculas (Alta)");
+        JButton btnAltaPelicula = new JButton("Gestionar Películas (Alta)");
         panel.add(btnAltaPelicula);
-        btnAltaPelicula.addActionListener(e -> {
-            PeliculaFrame ventana = new PeliculaFrame();
-            ventana.setVisible(true);
-            this.dispose();
-        });
+        btnAltaPelicula.addActionListener(e -> abrirVentana(new PeliculaFrame()));
 
-        JButton btnListarPeliculas = new JButton("Listar Peliculas");
+        JButton btnListarPeliculas = new JButton("Listar Películas");
         panel.add(btnListarPeliculas);
-        btnListarPeliculas.addActionListener(e -> {
-            ListarPeliculasFrame ventana = new ListarPeliculasFrame();
-            ventana.setVisible(true);
-        });
+        btnListarPeliculas.addActionListener(e -> abrirVentana(new ListarPeliculasFrame()));
 
-        JButton btnBuscarPelicula = new JButton("Buscar Pelicula");
+        JButton btnBuscarPelicula = new JButton("Buscar Película");
         panel.add(btnBuscarPelicula);
-        btnBuscarPelicula.addActionListener(e -> {
-            BuscarPeliculaFrame ventana = new BuscarPeliculaFrame();
-            ventana.setVisible(true);
-        });
+        btnBuscarPelicula.addActionListener(e -> abrirVentana(new BuscarPeliculaFrame()));
 
-        // -------------------------- BOTON FUNCIONES -------------------------
-        JButton btnGestionFunciones = new JButton("Gestion de Funciones");
+        JButton btnGestionFunciones = new JButton("Gestión de Funciones");
         panel.add(btnGestionFunciones);
-        btnGestionFunciones.addActionListener(e -> {
-            FuncionFrame funcionFrame = new FuncionFrame();
-            funcionFrame.setVisible(true);
-        });
+        btnGestionFunciones.addActionListener(e -> abrirVentana(new FuncionFrame()));
 
-        // ------------------------- BOTON SALIR -------------------------
         JButton btnSalir = new JButton("Salir");
         panel.add(btnSalir);
         btnSalir.addActionListener(e -> {
@@ -100,6 +69,11 @@ public class MainFrame extends JFrame {
 
         JLabel lblAlumno = new JLabel("Bruno Mercado", SwingConstants.RIGHT);
         add(lblAlumno, BorderLayout.SOUTH);
+    }
+
+    private void abrirVentana(JFrame ventana) {
+        ventana.setVisible(true);
+        this.dispose();
     }
 
 }

@@ -1,15 +1,20 @@
 // Bruno Mercado
+
 package com.cines.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import com.cines.control.ConectarBase;
 import com.cines.modelo.Funcion;
-import java.sql.*;
-import java.util.ArrayList;
 
-// Persistencia de la entidad Funcion contra la tabla 'funcion' de MySQL
 public class FuncionDAO {
 
-    // Inserta una nueva funcion en la base de datos
     public boolean registrarFuncion(Funcion funcion) {
         String sql = "INSERT INTO funcion (pelicula_id, sala_id, horario, precio) VALUES (?, ?, ?, ?)";
         ConectarBase conectarBase = new ConectarBase();
@@ -33,12 +38,11 @@ public class FuncionDAO {
             }
             return true;
         } catch (SQLException e) {
-            System.err.println("Error al registrar funcion: " + e.getMessage());
+            System.err.println("Error al registrar función: " + e.getMessage());
             return false;
         }
     }
 
-    // Devuelve el listado completo de funciones
     public ArrayList<Funcion> listarFunciones() {
         ArrayList<Funcion> lista = new ArrayList<>();
         String sql = "SELECT * FROM funcion ORDER BY id";
@@ -57,7 +61,6 @@ public class FuncionDAO {
         return lista;
     }
 
-    // Busca una funcion por su identificador y la devuelve, o null si no existe
     public Funcion obtenerFuncionPorId(int id) {
         String sql = "SELECT * FROM funcion WHERE id = ?";
         ConectarBase conectarBase = new ConectarBase();
@@ -73,12 +76,11 @@ public class FuncionDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error al buscar funcion por id: " + e.getMessage());
+            System.err.println("Error al buscar función por id: " + e.getMessage());
         }
         return null;
     }
 
-    // Actualiza los datos de una funcion existente
     public boolean actualizarFuncion(Funcion funcion) {
         String sql = "UPDATE funcion SET pelicula_id = ?, sala_id = ?, horario = ?, precio = ? WHERE id = ?";
         ConectarBase conectarBase = new ConectarBase();
@@ -94,12 +96,11 @@ public class FuncionDAO {
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error al actualizar funcion: " + e.getMessage());
+            System.err.println("Error al actualizar función: " + e.getMessage());
             return false;
         }
     }
 
-    // Elimina una funcion por su identificador
     public boolean eliminarFuncion(int id) {
         String sql = "DELETE FROM funcion WHERE id = ?";
         ConectarBase conectarBase = new ConectarBase();
@@ -110,12 +111,11 @@ public class FuncionDAO {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error al eliminar funcion: " + e.getMessage());
+            System.err.println("Error al eliminar función: " + e.getMessage());
             return false;
         }
     }
 
-    // Arma un objeto Funcion a partir de una fila del ResultSet
     private Funcion mapearFuncion(ResultSet rs) throws SQLException {
         Funcion f = new Funcion();
         f.setId(rs.getInt("id"));

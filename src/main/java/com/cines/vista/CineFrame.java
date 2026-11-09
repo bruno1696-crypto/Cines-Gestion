@@ -32,13 +32,11 @@ public class CineFrame extends JFrame {
     private JButton btnGuardar;
     private JButton btnVolver;
 
-    // Constructor del formulario de alta de cines
     public CineFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
-    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Alta de Cine");
         setSize(420, 340);
@@ -46,7 +44,6 @@ public class CineFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    // Crea y ubica los componentes graficos del formulario
     private void inicializarComponentes() {
         JPanel panelPrincipal = new JPanel(new BorderLayout());
 
@@ -68,7 +65,7 @@ public class CineFrame extends JFrame {
         chkAbierto = new JCheckBox();
         panelFormulario.add(chkAbierto);
 
-        panelFormulario.add(new JLabel("Fecha de inauguracion (dd/MM/yyyy):", SwingConstants.CENTER));
+        panelFormulario.add(new JLabel("Fecha de inauguración (dd/MM/yyyy):", SwingConstants.CENTER));
         txtFechaInauguracion = new JTextField();
         panelFormulario.add(txtFechaInauguracion);
 
@@ -83,7 +80,6 @@ public class CineFrame extends JFrame {
 
         add(panelPrincipal, BorderLayout.CENTER);
 
-        // Etiqueta con el nombre del alumno
         JLabel lblAlumno = new JLabel("Bruno Mercado", SwingConstants.RIGHT);
         add(lblAlumno, BorderLayout.SOUTH);
 
@@ -91,14 +87,12 @@ public class CineFrame extends JFrame {
         btnVolver.addActionListener(e -> volver());
     }
 
-    // Cierra el formulario y regresa al menu principal
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
-    // Valida los datos con expresiones regulares y guarda el cine en la base
     private void guardarCine() {
         try {
             String nombre = txtNombre.getText().trim();
@@ -113,19 +107,19 @@ public class CineFrame extends JFrame {
             }
 
             if (!ValidarDato.validarNombreCine(nombre)) {
-                JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras, numeros y espacios.",
+                JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras, números y espacios.",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             if (!ValidarDato.validarEnteroPositivo(salasTxt)) {
-                JOptionPane.showMessageDialog(this, "La cantidad de salas debe ser un numero entero positivo.",
+                JOptionPane.showMessageDialog(this, "La cantidad de salas debe ser un número entero positivo.",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             if (!ValidarDato.validarEnteroPositivo(capacidadTxt)) {
-                JOptionPane.showMessageDialog(this, "La capacidad debe ser un numero entero positivo.",
+                JOptionPane.showMessageDialog(this, "La capacidad debe ser un número entero positivo.",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -156,7 +150,7 @@ public class CineFrame extends JFrame {
             }
 
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(this, "La fecha ingresada no es valida.", "Error",
+            JOptionPane.showMessageDialog(this, "La fecha ingresada no es válida.", "Error",
                     JOptionPane.ERROR_MESSAGE);
             txtFechaInauguracion.setText("");
             txtFechaInauguracion.requestFocus();
@@ -166,7 +160,6 @@ public class CineFrame extends JFrame {
         }
     }
 
-    // Limpia todos los campos del formulario
     private void limpiarFormulario() {
         txtNombre.setText("");
         txtSalas.setText("");

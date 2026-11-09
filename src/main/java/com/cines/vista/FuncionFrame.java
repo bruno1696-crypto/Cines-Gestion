@@ -1,23 +1,36 @@
 // Bruno Mercado
+
 package com.cines.vista;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 import com.cines.control.ValidarDato;
 import com.cines.modelo.Cine;
-import com.cines.modelo.Pelicula;
 import com.cines.modelo.Funcion;
+import com.cines.modelo.Pelicula;
 import com.cines.modelo.Sala;
 import com.cines.servicio.impl.CineServicioImpl;
 import com.cines.servicio.impl.FuncionServicioImpl;
 import com.cines.servicio.impl.PeliculaServicioImpl;
 import com.cines.servicio.impl.SalaServicioImpl;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 
 public class FuncionFrame extends JFrame {
 
@@ -36,15 +49,13 @@ public class FuncionFrame extends JFrame {
     private final PeliculaServicioImpl peliculaServicio = new PeliculaServicioImpl();
     private final FuncionServicioImpl funcionServicio = new FuncionServicioImpl();
 
-    // Constructor del formulario de gestion de funciones
     public FuncionFrame() {
-        setTitle("Gestion de Funciones - Cines");
+        setTitle("Gestión de Funciones - Cines");
         setSize(750, 500);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // --- PANEL DE FORMULARIO (NORTE) ---
         JPanel panelForm = new JPanel(new GridLayout(5, 2, 5, 5));
         panelForm.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -56,7 +67,7 @@ public class FuncionFrame extends JFrame {
         cmbSalas = new JComboBox<>();
         panelForm.add(cmbSalas);
 
-        panelForm.add(new JLabel("Seleccionar Pelicula:"));
+        panelForm.add(new JLabel("Seleccionar Película:"));
         cmbPeliculas = new JComboBox<>();
         panelForm.add(cmbPeliculas);
 
@@ -70,9 +81,7 @@ public class FuncionFrame extends JFrame {
 
         add(panelForm, BorderLayout.NORTH);
 
-        // --- PANEL DE TABLA (CENTRO) ---
-        modeloTabla = new DefaultTableModel(new String[]{"ID", "ID Pelicula", "ID Sala", "Horario", "Precio"}, 0) {
-            // Impide que el usuario edite las celdas de la tabla
+        modeloTabla = new DefaultTableModel(new String[]{"ID", "ID Película", "ID Sala", "Horario", "Precio"}, 0) {
             @Override
             public boolean isCellEditable(int fila, int columna) {
                 return false;
@@ -81,14 +90,15 @@ public class FuncionFrame extends JFrame {
         tablaFunciones = new JTable(modeloTabla);
         add(new JScrollPane(tablaFunciones), BorderLayout.CENTER);
 
-        // --- PANEL DE BOTONES (SUR) ---
         JPanel panelBotones = new JPanel();
-        JButton btnGuardar = new JButton("Registrar Funcion");
+        JButton btnGuardar = new JButton("Registrar Función");
         JButton btnActualizar = new JButton("Actualizar Lista");
-        JButton btnEliminar = new JButton("Dar de Baja Funcion");
+        JButton btnEliminar = new JButton("Dar de Baja Función");
+        JButton btnVolver = new JButton("Volver");
         panelBotones.add(btnGuardar);
         panelBotones.add(btnActualizar);
         panelBotones.add(btnEliminar);
+        panelBotones.add(btnVolver);
 
         JLabel lblAlumno = new JLabel("Bruno Mercado", SwingConstants.RIGHT);
         JPanel panelInferior = new JPanel(new BorderLayout());
@@ -96,11 +106,9 @@ public class FuncionFrame extends JFrame {
         panelInferior.add(lblAlumno, BorderLayout.EAST);
         add(panelInferior, BorderLayout.SOUTH);
 
-        // --- CARGA INICIAL Y EVENTOS ---
         cargarCines();
         cargarPeliculas();
 
-        // Evento en cascada para las salas del cine seleccionado
         cmbCines.addActionListener(e -> {
             Cine cineSeleccionado = (Cine) cmbCines.getSelectedItem();
             if (cineSeleccionado != null) {
@@ -109,7 +117,7 @@ public class FuncionFrame extends JFrame {
         });
 
         // Al llenar el combo antes de registrar el listener, el primer cine queda
-        // seleccionado pero no dispara el evento. Cargo sus salas explicitamente.
+        // seleccionado pero no dispara el evento. Cargo sus salas explícitamente.
         Cine cineInicial = (Cine) cmbCines.getSelectedItem();
         if (cineInicial != null) {
             cargarSalasPorCine(cineInicial.getId());
@@ -118,11 +126,17 @@ public class FuncionFrame extends JFrame {
         btnGuardar.addActionListener(e -> registrarFuncion());
         btnActualizar.addActionListener(e -> cargarTablaFunciones());
         btnEliminar.addActionListener(e -> darDeBajaFuncion());
+        btnVolver.addActionListener(e -> volver());
 
         cargarTablaFunciones();
     }
 
-    // Carga el combo de cines a partir del servicio de cines
+    private void volver() {
+        this.dispose();
+        MainFrame ventanaPrincipal = new MainFrame();
+        ventanaPrincipal.setVisible(true);
+    }
+
     private void cargarCines() {
         cmbCines.removeAllItems();
         ArrayList<Cine> cines = cineServicio.listarCines();
@@ -131,7 +145,6 @@ public class FuncionFrame extends JFrame {
         }
     }
 
-    // Carga el combo de salas correspondientes al cine seleccionado
     private void cargarSalasPorCine(int cineId) {
         cmbSalas.removeAllItems();
         ArrayList<Sala> salas = salaServicio.listarSalasPorCine(cineId);
@@ -140,7 +153,6 @@ public class FuncionFrame extends JFrame {
         }
     }
 
-    // Carga el combo de peliculas a partir del servicio de peliculas
     private void cargarPeliculas() {
         cmbPeliculas.removeAllItems();
         ArrayList<Pelicula> peliculas = peliculaServicio.listarPeliculas();
@@ -149,14 +161,13 @@ public class FuncionFrame extends JFrame {
         }
     }
 
-    // Valida el horario y el precio con expresiones regulares y registra la funcion
     private void registrarFuncion() {
         try {
             Sala salaSeleccionada = (Sala) cmbSalas.getSelectedItem();
             Pelicula peliculaSeleccionada = (Pelicula) cmbPeliculas.getSelectedItem();
 
             if (salaSeleccionada == null || peliculaSeleccionada == null) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar una sala y una pelicula validas.",
+                JOptionPane.showMessageDialog(this, "Debe seleccionar una sala y una película válidas.",
                         "Advertencia", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -171,7 +182,7 @@ public class FuncionFrame extends JFrame {
             }
 
             if (!ValidarDato.validarPrecio(precioTxt)) {
-                JOptionPane.showMessageDialog(this, "El precio debe ser un numero positivo con hasta dos decimales.",
+                JOptionPane.showMessageDialog(this, "El precio debe ser un número positivo con hasta dos decimales.",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -194,15 +205,15 @@ public class FuncionFrame extends JFrame {
 
             boolean exito = funcionServicio.crearFuncion(f);
             if (exito) {
-                JOptionPane.showMessageDialog(this, "Funcion registrada con exito.");
+                JOptionPane.showMessageDialog(this, "Función registrada con éxito.");
                 cargarTablaFunciones();
             } else {
-                JOptionPane.showMessageDialog(this, "Error al registrar la funcion en la base de datos.",
+                JOptionPane.showMessageDialog(this, "Error al registrar la función en la base de datos.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(this, "El horario ingresado no es valido.", "Error",
+            JOptionPane.showMessageDialog(this, "El horario ingresado no es válido.", "Error",
                     JOptionPane.ERROR_MESSAGE);
 
         } catch (Exception ex) {
@@ -211,12 +222,11 @@ public class FuncionFrame extends JFrame {
         }
     }
 
-    // Elimina la funcion seleccionada en la tabla
     private void darDeBajaFuncion() {
         int fila = tablaFunciones.getSelectedRow();
 
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione una funcion de la tabla para dar de baja.",
+            JOptionPane.showMessageDialog(this, "Seleccione una función de la tabla para dar de baja.",
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -224,7 +234,7 @@ public class FuncionFrame extends JFrame {
         int id = (int) modeloTabla.getValueAt(fila, 0);
 
         int confirmacion = JOptionPane.showConfirmDialog(this,
-                "Confirma dar de baja la funcion ID " + id + "?",
+                "Confirma dar de baja la función ID " + id + "?",
                 "Confirmar baja", JOptionPane.YES_NO_OPTION);
 
         if (confirmacion != JOptionPane.YES_OPTION) {
@@ -232,15 +242,14 @@ public class FuncionFrame extends JFrame {
         }
 
         if (funcionServicio.eliminarFuncion(id)) {
-            JOptionPane.showMessageDialog(this, "Funcion dada de baja correctamente.");
+            JOptionPane.showMessageDialog(this, "Función dada de baja correctamente.");
             cargarTablaFunciones();
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo dar de baja la funcion.", "Error",
+            JOptionPane.showMessageDialog(this, "No se pudo dar de baja la función.", "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // Carga en la tabla el listado de funciones obtenido del servicio
     private void cargarTablaFunciones() {
         modeloTabla.setRowCount(0);
         ArrayList<Funcion> lista = funcionServicio.obtenerFunciones();

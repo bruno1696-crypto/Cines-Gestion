@@ -12,10 +12,8 @@ import java.util.ArrayList;
 import com.cines.control.ConectarBase;
 import com.cines.modelo.Pelicula;
 
-// Mismo esquema que CineDAO pero apuntando a la tabla 'pelicula'
 public class PeliculaDAO {
 
-    // Inserta una nueva pelicula en la base de datos y le asigna el id generado
     public boolean insertarPelicula(Pelicula pelicula) {
         String sql = "INSERT INTO pelicula (titulo, duracion, disponible, fechaEstreno) VALUES (?, ?, ?, ?)";
 
@@ -39,12 +37,11 @@ public class PeliculaDAO {
             return true;
 
         } catch (SQLException e) {
-            System.err.println("No se pudo guardar la pelicula en la base de datos: " + e.getMessage());
+            System.err.println("No se pudo guardar la película en la base de datos: " + e.getMessage());
             return false;
         }
     }
 
-    // Devuelve el listado completo de peliculas
     public ArrayList<Pelicula> obtenerPeliculas() {
         ArrayList<Pelicula> listaPeliculas = new ArrayList<>();
         String sql = "SELECT id, titulo, duracion, disponible, fechaEstreno FROM pelicula ORDER BY id";
@@ -57,12 +54,11 @@ public class PeliculaDAO {
                 listaPeliculas.add(mapearPelicula(resultSet));
             }
         } catch (SQLException e) {
-            System.out.println("No se pudieron leer las peliculas de la base de datos: " + e.getMessage());
+            System.out.println("No se pudieron leer las películas de la base de datos: " + e.getMessage());
         }
         return listaPeliculas;
     }
 
-    // Busca una pelicula por su identificador y la devuelve, o null si no existe
     public Pelicula obtenerPeliculaPorId(int id) {
         String sql = "SELECT id, titulo, duracion, disponible, fechaEstreno FROM pelicula WHERE id = ?";
 
@@ -77,32 +73,11 @@ public class PeliculaDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("No se pudo buscar la pelicula por id: " + e.getMessage());
+            System.err.println("No se pudo buscar la película por id: " + e.getMessage());
         }
         return null;
     }
 
-    // Busca una pelicula por su titulo (sin distinguir mayusculas) y la devuelve, o null si no existe
-    public Pelicula buscarPorTitulo(String titulo) {
-        String sql = "SELECT id, titulo, duracion, disponible, fechaEstreno FROM pelicula WHERE LOWER(titulo) = LOWER(?)";
-
-        try (Connection conexion = new ConectarBase().conectar();
-             PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, titulo);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return mapearPelicula(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("No se pudo buscar la pelicula por titulo: " + e.getMessage());
-        }
-        return null;
-    }
-
-    // Actualiza los datos de una pelicula existente
     public boolean actualizarPelicula(Pelicula pelicula) {
         String sql = "UPDATE pelicula SET titulo = ?, duracion = ?, disponible = ?, fechaEstreno = ? WHERE id = ?";
 
@@ -118,12 +93,11 @@ public class PeliculaDAO {
             return preparedStatement.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.err.println("No se pudo actualizar la pelicula: " + e.getMessage());
+            System.err.println("No se pudo actualizar la película: " + e.getMessage());
             return false;
         }
     }
 
-    // Elimina una pelicula por su identificador
     public boolean eliminarPelicula(int id) {
         String sql = "DELETE FROM pelicula WHERE id = ?";
 
@@ -134,12 +108,11 @@ public class PeliculaDAO {
             return preparedStatement.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.err.println("No se pudo eliminar la pelicula: " + e.getMessage());
+            System.err.println("No se pudo eliminar la película: " + e.getMessage());
             return false;
         }
     }
 
-    // Arma un objeto Pelicula a partir de una fila del ResultSet
     private Pelicula mapearPelicula(ResultSet resultSet) throws SQLException {
         Pelicula pelicula = new Pelicula();
         pelicula.setId(resultSet.getInt("id"));

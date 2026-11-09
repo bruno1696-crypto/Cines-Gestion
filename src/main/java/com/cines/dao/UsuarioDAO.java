@@ -5,11 +5,8 @@ package com.cines.dao;
 import com.cines.control.ConectarBase;
 import com.cines.modelo.Usuario;
 
-// Persistencia de Usuario. Solo se implementa la lectura porque no se
-// realizan otras operaciones con esta entidad.
 public class UsuarioDAO {
 
-    // Lee un usuario por su nombre desde la tabla 'usuarios'
     public Usuario leerUsuario(String nombreUsuario) {
 
         Usuario usuario = new Usuario();

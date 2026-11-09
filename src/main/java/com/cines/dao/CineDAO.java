@@ -12,11 +12,8 @@ import java.util.ArrayList;
 import com.cines.control.ConectarBase;
 import com.cines.modelo.Cine;
 
-// Toda la persistencia de Cine pasa por esta clase y por MySQL.
-// Se usa PreparedStatement para evitar problemas con caracteres especiales y ataques de inyeccion SQL.
 public class CineDAO {
 
-    // Inserta un nuevo cine en la base de datos y le asigna el id generado
     public boolean insertarCine(Cine cine) {
         String sql = "INSERT INTO cine (nombre, salas, abierto, fechaInauguracion) VALUES (?, ?, ?, ?)";
 
@@ -46,7 +43,6 @@ public class CineDAO {
         }
     }
 
-    // Devuelve el listado completo de cines
     public ArrayList<Cine> obtenerCines() {
         ArrayList<Cine> listaCines = new ArrayList<>();
         String sql = "SELECT id, nombre, salas, abierto, fechaInauguracion FROM cine ORDER BY id";
@@ -64,7 +60,6 @@ public class CineDAO {
         return listaCines;
     }
 
-    // Busca un cine por su identificador y lo devuelve, o null si no existe
     public Cine obtenerCinePorId(int id) {
         String sql = "SELECT id, nombre, salas, abierto, fechaInauguracion FROM cine WHERE id = ?";
 
@@ -84,27 +79,6 @@ public class CineDAO {
         return null;
     }
 
-    // Busca un cine por su nombre (sin distinguir mayusculas) y lo devuelve, o null si no existe
-    public Cine buscarPorNombre(String nombre) {
-        String sql = "SELECT id, nombre, salas, abierto, fechaInauguracion FROM cine WHERE LOWER(nombre) = LOWER(?)";
-
-        try (Connection conexion = new ConectarBase().conectar();
-             PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, nombre);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return mapearCine(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("No se pudo buscar el cine por nombre: " + e.getMessage());
-        }
-        return null;
-    }
-
-    // Actualiza los datos de un cine existente
     public boolean actualizarCine(Cine cine) {
         String sql = "UPDATE cine SET nombre = ?, salas = ?, abierto = ?, fechaInauguracion = ? WHERE id = ?";
 
@@ -125,7 +99,6 @@ public class CineDAO {
         }
     }
 
-    // Elimina un cine por su identificador
     public boolean eliminarCine(int id) {
         String sql = "DELETE FROM cine WHERE id = ?";
 
@@ -141,7 +114,6 @@ public class CineDAO {
         }
     }
 
-    // Arma un objeto Cine a partir de una fila del ResultSet
     private Cine mapearCine(ResultSet resultSet) throws SQLException {
         Cine cine = new Cine();
         cine.setId(resultSet.getInt("id"));

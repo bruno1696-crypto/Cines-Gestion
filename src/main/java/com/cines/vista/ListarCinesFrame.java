@@ -20,22 +20,19 @@ public class ListarCinesFrame extends JFrame {
 
     private JTextArea areaResultado;
 
-    // Constructor de la ventana de listado de cines
     public ListarCinesFrame() {
         configurarVentana();
         inicializarComponentes();
         listarCines();
     }
 
-    // Configura el titulo, tamano y comportamiento de cierre de la ventana
     private void configurarVentana() {
         setTitle("Listado de Cines");
         setSize(450, 350);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
-    // Crea y ubica los componentes graficos de la ventana
     private void inicializarComponentes() {
         areaResultado = new JTextArea();
         areaResultado.setEditable(false);
@@ -44,9 +41,9 @@ public class ListarCinesFrame extends JFrame {
 
         JPanel panelInferior = new JPanel(new BorderLayout());
 
-        JButton btnCerrar = new JButton("Cerrar");
-        btnCerrar.addActionListener(e -> this.dispose());
-        panelInferior.add(btnCerrar, BorderLayout.WEST);
+        JButton btnVolver = new JButton("Volver");
+        btnVolver.addActionListener(e -> volver());
+        panelInferior.add(btnVolver, BorderLayout.WEST);
 
         JLabel lblAlumno = new JLabel("Bruno Mercado", SwingConstants.RIGHT);
         panelInferior.add(lblAlumno, BorderLayout.EAST);
@@ -54,7 +51,12 @@ public class ListarCinesFrame extends JFrame {
         add(panelInferior, BorderLayout.SOUTH);
     }
 
-    // Obtiene el listado de cines y lo muestra en el area de texto
+    private void volver() {
+        this.dispose();
+        MainFrame ventanaPrincipal = new MainFrame();
+        ventanaPrincipal.setVisible(true);
+    }
+
     private void listarCines() {
         CineServicioImpl servicio = new CineServicioImpl();
         ArrayList<Cine> listaCines = servicio.listarCines();
