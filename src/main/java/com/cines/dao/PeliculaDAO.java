@@ -14,6 +14,7 @@ import com.cines.modelo.Pelicula;
 
 public class PeliculaDAO {
 
+    // Inserta una película y recupera su id.
     public boolean insertarPelicula(Pelicula pelicula) {
         String sql = "INSERT INTO pelicula (titulo, duracion, disponible, fechaEstreno) VALUES (?, ?, ?, ?)";
 
@@ -42,6 +43,7 @@ public class PeliculaDAO {
         }
     }
 
+    // Devuelve todas las películas.
     public ArrayList<Pelicula> obtenerPeliculas() {
         ArrayList<Pelicula> listaPeliculas = new ArrayList<>();
         String sql = "SELECT id, titulo, duracion, disponible, fechaEstreno FROM pelicula ORDER BY id";
@@ -59,6 +61,7 @@ public class PeliculaDAO {
         return listaPeliculas;
     }
 
+    // Busca una película por id.
     public Pelicula obtenerPeliculaPorId(int id) {
         String sql = "SELECT id, titulo, duracion, disponible, fechaEstreno FROM pelicula WHERE id = ?";
 
@@ -78,6 +81,7 @@ public class PeliculaDAO {
         return null;
     }
 
+    // Actualiza una película existente.
     public boolean actualizarPelicula(Pelicula pelicula) {
         String sql = "UPDATE pelicula SET titulo = ?, duracion = ?, disponible = ?, fechaEstreno = ? WHERE id = ?";
 
@@ -98,6 +102,7 @@ public class PeliculaDAO {
         }
     }
 
+    // Elimina una película por id.
     public boolean eliminarPelicula(int id) {
         String sql = "DELETE FROM pelicula WHERE id = ?";
 
@@ -113,6 +118,7 @@ public class PeliculaDAO {
         }
     }
 
+    // Arma una Pelicula a partir de la fila actual.
     private Pelicula mapearPelicula(ResultSet resultSet) throws SQLException {
         Pelicula pelicula = new Pelicula();
         pelicula.setId(resultSet.getInt("id"));

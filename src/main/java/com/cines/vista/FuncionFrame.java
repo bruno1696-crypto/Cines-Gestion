@@ -49,6 +49,7 @@ public class FuncionFrame extends JFrame {
     private final PeliculaServicioImpl peliculaServicio = new PeliculaServicioImpl();
     private final FuncionServicioImpl funcionServicio = new FuncionServicioImpl();
 
+    // Arma la pantalla de funciones.
     public FuncionFrame() {
         setTitle("Gestión de Funciones - Cines");
         setSize(750, 500);
@@ -82,6 +83,7 @@ public class FuncionFrame extends JFrame {
         add(panelForm, BorderLayout.NORTH);
 
         modeloTabla = new DefaultTableModel(new String[]{"ID", "ID Película", "ID Sala", "Horario", "Precio"}, 0) {
+            // Las celdas de la tabla son solo de lectura.
             @Override
             public boolean isCellEditable(int fila, int columna) {
                 return false;
@@ -131,12 +133,14 @@ public class FuncionFrame extends JFrame {
         cargarTablaFunciones();
     }
 
+    // Vuelve al menú.
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Llena el combo de cines.
     private void cargarCines() {
         cmbCines.removeAllItems();
         ArrayList<Cine> cines = cineServicio.listarCines();
@@ -145,6 +149,7 @@ public class FuncionFrame extends JFrame {
         }
     }
 
+    // Llena el combo de salas según el cine.
     private void cargarSalasPorCine(int cineId) {
         cmbSalas.removeAllItems();
         ArrayList<Sala> salas = salaServicio.listarSalasPorCine(cineId);
@@ -153,6 +158,7 @@ public class FuncionFrame extends JFrame {
         }
     }
 
+    // Llena el combo de películas.
     private void cargarPeliculas() {
         cmbPeliculas.removeAllItems();
         ArrayList<Pelicula> peliculas = peliculaServicio.listarPeliculas();
@@ -161,6 +167,7 @@ public class FuncionFrame extends JFrame {
         }
     }
 
+    // Valida y guarda la función.
     private void registrarFuncion() {
         try {
             Sala salaSeleccionada = (Sala) cmbSalas.getSelectedItem();
@@ -222,6 +229,7 @@ public class FuncionFrame extends JFrame {
         }
     }
 
+    // Confirma y elimina la función seleccionada.
     private void darDeBajaFuncion() {
         int fila = tablaFunciones.getSelectedRow();
 
@@ -250,6 +258,7 @@ public class FuncionFrame extends JFrame {
         }
     }
 
+    // Refresca la tabla de funciones.
     private void cargarTablaFunciones() {
         modeloTabla.setRowCount(0);
         ArrayList<Funcion> lista = funcionServicio.obtenerFunciones();

@@ -7,6 +7,7 @@ import com.cines.modelo.Usuario;
 
 public class UsuarioDAO {
 
+    // Busca un usuario por nombre para el login.
     public Usuario leerUsuario(String nombreUsuario) {
 
         Usuario usuario = new Usuario();

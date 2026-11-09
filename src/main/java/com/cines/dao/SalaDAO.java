@@ -16,6 +16,7 @@ public class SalaDAO {
 
     public static final int CAPACIDAD_POR_DEFECTO = 100;
 
+    // Inserta una sala suelta.
     public boolean insertarSala(Sala sala) {
         String sql = "INSERT INTO sala (cine_id, nombre, capacidad) VALUES (?, ?, ?)";
 
@@ -42,6 +43,7 @@ public class SalaDAO {
         }
     }
 
+    // Lista todas las salas.
     public ArrayList<Sala> listarSalas() {
         ArrayList<Sala> lista = new ArrayList<>();
         String sql = "SELECT * FROM sala ORDER BY id";
@@ -59,6 +61,7 @@ public class SalaDAO {
         return lista;
     }
 
+    // Lista las salas de un cine para el combo.
     public ArrayList<Sala> listarSalasPorCine(int cineId) {
         ArrayList<Sala> lista = new ArrayList<>();
         String sql = "SELECT * FROM sala WHERE cine_id = ? ORDER BY id";
@@ -78,6 +81,7 @@ public class SalaDAO {
         return lista;
     }
 
+    // Busca una sala por id.
     public Sala obtenerSalaPorId(int id) {
         String sql = "SELECT * FROM sala WHERE id = ?";
 
@@ -97,6 +101,7 @@ public class SalaDAO {
         return null;
     }
 
+    // Actualiza una sala.
     public boolean actualizarSala(Sala sala) {
         String sql = "UPDATE sala SET cine_id = ?, nombre = ?, capacidad = ? WHERE id = ?";
 
@@ -115,6 +120,7 @@ public class SalaDAO {
         }
     }
 
+    // Borra una sala por id.
     public boolean eliminarSala(int id) {
         String sql = "DELETE FROM sala WHERE id = ?";
 
@@ -129,10 +135,12 @@ public class SalaDAO {
         }
     }
 
+    // Crea las salas iniciales de un cine.
     public boolean crearSalasParaCine(int cineId, int cantidad, int capacidad) {
         return crearSalas(cineId, 1, cantidad, capacidad) == cantidad;
     }
 
+    // Inserta varias salas en un solo batch.
     private int crearSalas(int cineId, int desdeNumero, int cantidad, int capacidad) {
         if (cantidad <= 0) {
             return 0;
@@ -199,6 +207,7 @@ public class SalaDAO {
         return creadas;
     }
 
+    // Pasa la fila de sala al objeto Sala.
     private Sala mapearSala(ResultSet rs) throws SQLException {
         Sala sala = new Sala();
         sala.setId(rs.getInt("id"));

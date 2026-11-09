@@ -13,6 +13,7 @@ import com.cines.servicio.UsuarioServicio;
 
 public class UsuarioServicioImpl implements UsuarioServicio {
 
+    // Compara la clave ingresada con el hash guardado.
     @Override
     public boolean validarUsuario(String nombreUsuario, String claveUsuario) {
         UsuarioDAO usuariosDAO = new UsuarioDAO();
@@ -26,6 +27,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         return false;
     }
 
+    // Calcula el MD5 en hexadecimal.
     private String convertirMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

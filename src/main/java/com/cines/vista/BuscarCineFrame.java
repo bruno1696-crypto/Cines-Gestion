@@ -24,11 +24,13 @@ public class BuscarCineFrame extends JFrame {
     private JTextField txtNombre;
     private JTextArea areaResultado;
 
+    // Prepara la búsqueda por nombre.
     public BuscarCineFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura la ventana.
     private void configurarVentana() {
         setTitle("Buscar Cine");
         setSize(420, 320);
@@ -36,6 +38,7 @@ public class BuscarCineFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Campo de búsqueda y área de resultados.
     private void inicializarComponentes() {
         JPanel panelBusqueda = new JPanel(new FlowLayout());
         panelBusqueda.add(new JLabel("Nombre del cine:"));
@@ -65,12 +68,14 @@ public class BuscarCineFrame extends JFrame {
         btnBuscar.addActionListener(e -> buscarCine());
     }
 
+    // Vuelve al menú.
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Valida y busca coincidencias.
     private void buscarCine() {
         String nombre = txtNombre.getText().trim();
 

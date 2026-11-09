@@ -31,11 +31,13 @@ public class PeliculaFrame extends JFrame {
     private JButton btnGuardar;
     private JButton btnVolver;
 
+    // Prepara el formulario de alta de película.
     public PeliculaFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura la ventana.
     private void configurarVentana() {
         setTitle("Alta de Película");
         setSize(400, 300);
@@ -43,6 +45,7 @@ public class PeliculaFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Agrega los campos y botones.
     private void inicializarComponentes() {
         JPanel panelPrincipal = new JPanel(new BorderLayout());
 
@@ -82,12 +85,14 @@ public class PeliculaFrame extends JFrame {
         btnVolver.addActionListener(e -> volver());
     }
 
+    // Vuelve al menú.
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Valida y guarda la película.
     private void guardarPelicula() {
         try {
             String titulo = txtTitulo.getText().trim();
@@ -147,6 +152,7 @@ public class PeliculaFrame extends JFrame {
         }
     }
 
+    // Limpia los campos.
     private void limpiarFormulario() {
         txtTitulo.setText("");
         txtDuracion.setText("");

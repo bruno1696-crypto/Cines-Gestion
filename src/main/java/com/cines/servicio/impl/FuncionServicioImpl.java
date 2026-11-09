@@ -12,6 +12,7 @@ public class FuncionServicioImpl implements FuncionServicio {
 
     private final FuncionDAO funcionDAO = new FuncionDAO();
 
+    // Controla el precio y registra la función.
     @Override
     public boolean crearFuncion(Funcion funcion) {
         if (funcion.getPrecio() <= 0) {
@@ -20,16 +21,19 @@ public class FuncionServicioImpl implements FuncionServicio {
         return funcionDAO.registrarFuncion(funcion);
     }
 
+    // Devuelve las funciones para la tabla.
     @Override
     public ArrayList<Funcion> obtenerFunciones() {
         return funcionDAO.listarFunciones();
     }
 
+    // Busca una función puntual.
     @Override
     public Funcion buscarFuncion(int id) {
         return funcionDAO.obtenerFuncionPorId(id);
     }
 
+    // Valida el precio y actualiza.
     @Override
     public boolean actualizarFuncion(Funcion funcion) {
         if (funcion.getPrecio() <= 0) {
@@ -38,6 +42,7 @@ public class FuncionServicioImpl implements FuncionServicio {
         return funcionDAO.actualizarFuncion(funcion);
     }
 
+    // Elimina la función indicada.
     @Override
     public boolean eliminarFuncion(int id) {
         return funcionDAO.eliminarFuncion(id);

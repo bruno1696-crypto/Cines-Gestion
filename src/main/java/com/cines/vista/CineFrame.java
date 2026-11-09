@@ -32,11 +32,13 @@ public class CineFrame extends JFrame {
     private JButton btnGuardar;
     private JButton btnVolver;
 
+    // Prepara el formulario de alta de cine.
     public CineFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura la ventana.
     private void configurarVentana() {
         setTitle("Alta de Cine");
         setSize(420, 340);
@@ -44,6 +46,7 @@ public class CineFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Agrega los campos y botones.
     private void inicializarComponentes() {
         JPanel panelPrincipal = new JPanel(new BorderLayout());
 
@@ -87,12 +90,14 @@ public class CineFrame extends JFrame {
         btnVolver.addActionListener(e -> volver());
     }
 
+    // Cierra este formulario y vuelve al menú.
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Valida y guarda el cine.
     private void guardarCine() {
         try {
             String nombre = txtNombre.getText().trim();
@@ -160,6 +165,7 @@ public class CineFrame extends JFrame {
         }
     }
 
+    // Deja los campos listos para otro alta.
     private void limpiarFormulario() {
         txtNombre.setText("");
         txtSalas.setText("");

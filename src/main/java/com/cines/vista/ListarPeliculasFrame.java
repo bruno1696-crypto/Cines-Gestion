@@ -20,12 +20,14 @@ public class ListarPeliculasFrame extends JFrame {
 
     private JTextArea areaResultado;
 
+    // Prepara la ventana y carga las películas.
     public ListarPeliculasFrame() {
         configurarVentana();
         inicializarComponentes();
         listarPeliculas();
     }
 
+    // Título y tamaño.
     private void configurarVentana() {
         setTitle("Listado de Películas");
         setSize(450, 350);
@@ -33,6 +35,7 @@ public class ListarPeliculasFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Área de texto y botón volver.
     private void inicializarComponentes() {
         areaResultado = new JTextArea();
         areaResultado.setEditable(false);
@@ -51,12 +54,14 @@ public class ListarPeliculasFrame extends JFrame {
         add(panelInferior, BorderLayout.SOUTH);
     }
 
+    // Vuelve al menú.
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Pide las películas y las muestra.
     private void listarPeliculas() {
         PeliculaServicioImpl servicio = new PeliculaServicioImpl();
         ArrayList<Pelicula> listaPeliculas = servicio.listarPeliculas();

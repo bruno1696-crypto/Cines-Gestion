@@ -26,6 +26,7 @@ public class UsuarioFrame extends JFrame {
     private JPasswordField txtClave;
     private JButton btnIngresar;
 
+    // Construye el formulario de acceso.
     public UsuarioFrame() {
         setTitle("Acceso al Sistema - Cines Gestión");
         setSize(320, 180);
@@ -57,6 +58,7 @@ public class UsuarioFrame extends JFrame {
 
         btnIngresar.addActionListener(new ActionListener() {
 
+            // Valida los datos y abre el menú si el login es correcto.
             @Override
             public void actionPerformed(ActionEvent e) {
                 String usuario = txtUsuario.getText().trim();

@@ -20,12 +20,14 @@ public class ListarCinesFrame extends JFrame {
 
     private JTextArea areaResultado;
 
+    // Prepara la ventana y carga los cines.
     public ListarCinesFrame() {
         configurarVentana();
         inicializarComponentes();
         listarCines();
     }
 
+    // Título y tamaño.
     private void configurarVentana() {
         setTitle("Listado de Cines");
         setSize(450, 350);
@@ -33,6 +35,7 @@ public class ListarCinesFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Área de texto y botón volver.
     private void inicializarComponentes() {
         areaResultado = new JTextArea();
         areaResultado.setEditable(false);
@@ -51,12 +54,14 @@ public class ListarCinesFrame extends JFrame {
         add(panelInferior, BorderLayout.SOUTH);
     }
 
+    // Vuelve al menú.
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Pide los cines y los muestra.
     private void listarCines() {
         CineServicioImpl servicio = new CineServicioImpl();
         ArrayList<Cine> listaCines = servicio.listarCines();

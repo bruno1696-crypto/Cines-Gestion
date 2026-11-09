@@ -15,6 +15,7 @@ import com.cines.vista.UsuarioFrame;
 
 public class Main {
 
+    // Punto de entrada: verifica la base y abre el login.
     public static void main(String[] args) {
 
         System.out.println("Iniciando programa.");
@@ -41,6 +42,7 @@ public class Main {
         });
     }
 
+    // Prueba la conexión antes de arrancar la interfaz.
     private static boolean hayConexionBD() {
         try (Connection conexion = new ConectarBase().conectar()) {
             return conexion != null;

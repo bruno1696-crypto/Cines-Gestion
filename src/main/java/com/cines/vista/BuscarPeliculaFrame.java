@@ -24,11 +24,13 @@ public class BuscarPeliculaFrame extends JFrame {
     private JTextField txtTitulo;
     private JTextArea areaResultado;
 
+    // Prepara la búsqueda por título.
     public BuscarPeliculaFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Configura la ventana.
     private void configurarVentana() {
         setTitle("Buscar Película");
         setSize(420, 320);
@@ -36,6 +38,7 @@ public class BuscarPeliculaFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Campo de búsqueda y área de resultados.
     private void inicializarComponentes() {
         JPanel panelBusqueda = new JPanel(new FlowLayout());
         panelBusqueda.add(new JLabel("Título de la película:"));
@@ -65,12 +68,14 @@ public class BuscarPeliculaFrame extends JFrame {
         btnBuscar.addActionListener(e -> buscarPelicula());
     }
 
+    // Vuelve al menú.
     private void volver() {
         this.dispose();
         MainFrame ventanaPrincipal = new MainFrame();
         ventanaPrincipal.setVisible(true);
     }
 
+    // Valida y busca coincidencias.
     private void buscarPelicula() {
         String titulo = txtTitulo.getText().trim();
 

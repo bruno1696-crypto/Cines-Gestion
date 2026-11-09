@@ -15,6 +15,7 @@ import com.cines.modelo.Funcion;
 
 public class FuncionDAO {
 
+    // Guarda una función y obtiene el id generado.
     public boolean registrarFuncion(Funcion funcion) {
         String sql = "INSERT INTO funcion (pelicula_id, sala_id, horario, precio) VALUES (?, ?, ?, ?)";
         ConectarBase conectarBase = new ConectarBase();
@@ -43,6 +44,7 @@ public class FuncionDAO {
         }
     }
 
+    // Trae todas las funciones para la tabla.
     public ArrayList<Funcion> listarFunciones() {
         ArrayList<Funcion> lista = new ArrayList<>();
         String sql = "SELECT * FROM funcion ORDER BY id";
@@ -61,6 +63,7 @@ public class FuncionDAO {
         return lista;
     }
 
+    // Busca una función por id.
     public Funcion obtenerFuncionPorId(int id) {
         String sql = "SELECT * FROM funcion WHERE id = ?";
         ConectarBase conectarBase = new ConectarBase();
@@ -81,6 +84,7 @@ public class FuncionDAO {
         return null;
     }
 
+    // Modifica una función existente.
     public boolean actualizarFuncion(Funcion funcion) {
         String sql = "UPDATE funcion SET pelicula_id = ?, sala_id = ?, horario = ?, precio = ? WHERE id = ?";
         ConectarBase conectarBase = new ConectarBase();
@@ -101,6 +105,7 @@ public class FuncionDAO {
         }
     }
 
+    // Da de baja una función por id.
     public boolean eliminarFuncion(int id) {
         String sql = "DELETE FROM funcion WHERE id = ?";
         ConectarBase conectarBase = new ConectarBase();
@@ -116,6 +121,7 @@ public class FuncionDAO {
         }
     }
 
+    // Convierte la fila en un objeto Funcion.
     private Funcion mapearFuncion(ResultSet rs) throws SQLException {
         Funcion f = new Funcion();
         f.setId(rs.getInt("id"));

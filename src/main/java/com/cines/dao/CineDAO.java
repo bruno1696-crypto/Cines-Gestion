@@ -14,6 +14,7 @@ import com.cines.modelo.Cine;
 
 public class CineDAO {
 
+    // Inserta un cine y recibe el id autogenerado.
     public boolean insertarCine(Cine cine) {
         String sql = "INSERT INTO cine (nombre, salas, abierto, fechaInauguracion) VALUES (?, ?, ?, ?)";
 
@@ -43,6 +44,7 @@ public class CineDAO {
         }
     }
 
+    // Devuelve todos los cines para listados y combos.
     public ArrayList<Cine> obtenerCines() {
         ArrayList<Cine> listaCines = new ArrayList<>();
         String sql = "SELECT id, nombre, salas, abierto, fechaInauguracion FROM cine ORDER BY id";
@@ -60,6 +62,7 @@ public class CineDAO {
         return listaCines;
     }
 
+    // Busca un cine por su id.
     public Cine obtenerCinePorId(int id) {
         String sql = "SELECT id, nombre, salas, abierto, fechaInauguracion FROM cine WHERE id = ?";
 
@@ -79,6 +82,7 @@ public class CineDAO {
         return null;
     }
 
+    // Actualiza los datos de un cine existente.
     public boolean actualizarCine(Cine cine) {
         String sql = "UPDATE cine SET nombre = ?, salas = ?, abierto = ?, fechaInauguracion = ? WHERE id = ?";
 
@@ -99,6 +103,7 @@ public class CineDAO {
         }
     }
 
+    // Borra un cine por id.
     public boolean eliminarCine(int id) {
         String sql = "DELETE FROM cine WHERE id = ?";
 
@@ -114,6 +119,7 @@ public class CineDAO {
         }
     }
 
+    // Convierte una fila de la consulta en un objeto Cine.
     private Cine mapearCine(ResultSet resultSet) throws SQLException {
         Cine cine = new Cine();
         cine.setId(resultSet.getInt("id"));

@@ -14,6 +14,7 @@ public class CineServicioImpl implements CineServicio {
     private final CineDAO cineDAO = new CineDAO();
     private final SalaDAO salaDAO = new SalaDAO();
 
+    // Inserta el cine y después crea sus salas.
     @Override
     public boolean agregarCine(Cine cine, int capacidadPorSala) {
         if (!cineDAO.insertarCine(cine)) {
@@ -27,11 +28,13 @@ public class CineServicioImpl implements CineServicio {
         return true;
     }
 
+    // Delegado al DAO para listar cines.
     @Override
     public ArrayList<Cine> listarCines() {
         return cineDAO.obtenerCines();
     }
 
+    // Filtra los cines por nombre, sin distinguir mayúsculas.
     @Override
     public ArrayList<Cine> buscarPorNombre(String nombre) {
         ArrayList<Cine> coincidencias = new ArrayList<>();
@@ -45,11 +48,13 @@ public class CineServicioImpl implements CineServicio {
         return coincidencias;
     }
 
+    // Pasa la actualización al DAO.
     @Override
     public boolean actualizarCine(Cine cine) {
         return cineDAO.actualizarCine(cine);
     }
 
+    // Pide al DAO que borre el cine.
     @Override
     public boolean eliminarCine(int id) {
         return cineDAO.eliminarCine(id);

@@ -13,11 +13,13 @@ import javax.swing.SwingConstants;
 
 public class MainFrame extends JFrame {
 
+    // Arma la ventana principal.
     public MainFrame() {
         configurarVentana();
         inicializarComponentes();
     }
 
+    // Título, tamaño y comportamiento de cierre.
     private void configurarVentana() {
         setTitle("Sistema de Gestión de Cines");
         setSize(420, 400);
@@ -25,6 +27,7 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Crea los botones del menú.
     private void inicializarComponentes() {
 
         JPanel panel = new JPanel();
@@ -71,6 +74,7 @@ public class MainFrame extends JFrame {
         add(lblAlumno, BorderLayout.SOUTH);
     }
 
+    // Muestra la ventana y cierra el menú.
     private void abrirVentana(JFrame ventana) {
         ventana.setVisible(true);
         this.dispose();
